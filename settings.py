@@ -2,15 +2,11 @@
 
 """Setting for program."""
 
-SOURCE_FILEPATH = 'input/data.txt'
-TARGET_FILEPATH = 'output/filter'
-SAMPLE_RATE = 10000
-TIME_MEASUGING = 0.3
 DEFAULT_STEP_ITER = 25
 MAX_ITER_VALUE = 0.005
 MAX_STEP_ITER = 50
-ORDER = 3   # For Butterworth filter
-RP = 3
+ORDER = 3               # order for filter
+RP = 3                  #  for Chebyshev filter
 MAX_START_SEARCH = 0.08
 MAX_END_SEARCH = 0.1
 MIN_START_SEARCH = 0.18

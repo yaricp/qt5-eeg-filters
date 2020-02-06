@@ -31,7 +31,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.time_measuring = TIME_MEASUGING
+        self.time_measuring = 0
         self.order = ORDER
         self.rp = RP
         self.max_start_search = MAX_START_SEARCH
