@@ -46,11 +46,10 @@ The any stage of your reseach you can save in a folder what you want.
 
 ## Settings
 
-Main setting of program are in file settings.py in projects folder.
+Main setting of program are in file settings.py in project folder.
 
-You can set a default list of bandwiths, begin and end for regions searching extremums.
+You can set a default list of bandwiths, begin and end for regions for searching extremums.
 
-Important values are ORDER filter and RP for Chebyshev filter.
+Important values are ORDER and RP for Chebyshev filter.
 
-By change this values you can mange work of filter.
-
+By changing this values you can mange work of filter.
