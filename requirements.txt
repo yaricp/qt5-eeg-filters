@@ -1,0 +1,3 @@
+eeg-filters
+pyQt5
+pyqtgraph
