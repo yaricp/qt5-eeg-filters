@@ -1,10 +1,10 @@
 # qt5-eeg-filters
 
-GUI for eeg-filters based on Qt5
+GUI for eeg-filters based on Qt5.
 
 ## Requirements
 
-Programm require python >= 3.6
+Program require python >= 3.6
 
 Also:
 
@@ -12,7 +12,7 @@ Also:
 * pyQt5
 * pyqtgraph
 
-Note: You must have Qt5 installation om your PC.
+Note: You must have installed Qt5  on your PC.
 
 ## Installation
 
@@ -26,22 +26,22 @@ $ ./install.sh
 
 ## Usage
 
-For start programm just:
+For start program just:
 
 ```
 $ ./start.sh
 ```
 
-After that you can see main windows of program:
+After that you can to see a main window of program:
 
 You can open a file with EEG signals data.
-This file you can get from NeuroExplorer4.4 by export data to ASCII format.
+This file you can get from NeuroExplorer4.4 by exporting data to ASCII format.
 
-When curves will be showed on main plot you can make a filter it by checking bandwith in list of bandwidths.
+When curves will be showed on main plot you can make a filter it by choosing bandwith in list of bandwidths.
 
-You can move regions for searching extremums. Also you can change boundaries of this regions by text filds over main plot.
+You can move regions for searching extremums. Also you can change boundaries of this regions by text filds over main graphic.
 
-The any stage of your reseach you can save in folder what you want.
+The any stage of your reseach you can save in a folder what you want.
 
 
 ## Settings
