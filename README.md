@@ -4,7 +4,8 @@ GUI for eeg-filters ( https://github.com/yaricp/eeg-filters ) based on Qt5.
 
 ## Requirements
 
-Program require python >= 3.6
+Program require python >= 3.6.
+It was tested on Ubuntu 18.04.
 
 Also:
 
