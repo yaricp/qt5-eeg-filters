@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Setting for program."""
+"""Settings for program."""
 
 DEFAULT_STEP_ITER = 25
 MAX_ITER_VALUE = 0.005

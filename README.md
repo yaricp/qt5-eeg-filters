@@ -4,16 +4,16 @@ GUI for eeg-filters ( https://github.com/yaricp/eeg-filters ) based on Qt5.
 
 ## Requirements
 
-Program require python >= 3.6 and python3-venv.
-It was tested on Ubuntu 18.04.
+Program require python >= 3.6, python3-venv, and Qt5.
+Tested on Ubuntu 18.04.
 
-Also packages are required:
+The following pip packages are required (see Installation):
 
 * eeg-filters
 * pyQt5
 * pyqtgraph
 
-Note: You need to make sure you've installed Qt5 on your system.
+Note: Make sure you have Qt5 installed Qt5 on your system.
 
 ## Installation
 
@@ -23,32 +23,34 @@ $ cd qt5-eeg-filters/
 $ ./install.sh
 ```
 
+`install.sh` will download and set up necessary packages in a venv.
+
 ## Usage
 
-For start program just:
+To start the program, run:
 
 ```
 $ ./start.sh
 ```
 
-After that you can to see a main window of program:
+After that you will see the main window of program.
 
 You can open a file with EEG signals or EP data.
 This file you can get from NeuroExplorer4.4 by exporting data to ASCII format.
 
-When curves will be showed on main plot you can make a filter it by choosing bandwith in list of bandwidths.
+When curves are showed on the main plot you can apply a filter by choosing bandwith in the list of bandwidths.
 
-You can move regions for searching extremums. Also you can change boundaries of this regions by text filds over main graphic.
+You can move regions with mouse for searching extremums. Also you can change boundaries of these regions by means of text fields over the main graph.
 
-The any stage of your reseach you can save in a folder what you want.
+You can save any stage of your reseach in a folder of your selection.
 
 
 ## Settings
 
-Main setting of program are in file settings.py in project folder.
+Main settings are set in `settings.py` in the program folder.
 
-You can set a default list of bandwiths, begin and end for regions for searching extremums.
+You can set default list of bandwiths and boundaries for regions of search for extremums.
 
-Important values are ORDER and RP for Chebyshev filter.
+Important values are ORDER and RP, for Chebyshev filter.
 
-By changing this values you can mange work of filter.
+By changing these values you can control the work of filter.
