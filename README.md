@@ -13,7 +13,7 @@ The following pip packages are required (see Installation):
 * pyQt5
 * pyqtgraph
 
-Note: Make sure you have Qt5 installed Qt5 on your system.
+Note: Make sure you have Qt5 installed on your system.
 
 ## Installation
 
