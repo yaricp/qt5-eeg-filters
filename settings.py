@@ -5,8 +5,8 @@
 DEFAULT_STEP_ITER = 25
 MAX_ITER_VALUE = 0.005
 MAX_STEP_ITER = 50
-ORDER = 3               # order for filter
-RP = 3                  #  for Chebyshev filter
+FILTER_ORDER = 3          # order for filter
+RIPPLE = 3                # for Chebyshev filter
 MAX_START_SEARCH = 0.08
 MAX_END_SEARCH = 0.1
 MIN_START_SEARCH = 0.18
