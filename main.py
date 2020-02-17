@@ -31,38 +31,64 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.time_measuring = 0
-        self.order = ORDER
-        self.rp = RP
-        self.max_start_search = MAX_START_SEARCH
-        self.max_end_search = MAX_END_SEARCH
-        self.min_start_search = MIN_START_SEARCH
-        self.min_end_search = MIN_END_SEARCH
-        self.bandwidths = BANDWIDTHS
-        self.max_iter_value = MAX_ITER_VALUE
-        self.max_step_iter = MAX_STEP_ITER
-        self.default_step_iter = DEFAULT_STEP_ITER
-        self.iter_value = (
-                            MAX_ITER_VALUE
-                            * DEFAULT_STEP_ITER
-                            / MAX_STEP_ITER
-                            )
+        self.config = collections.namedtuple("Settings", [
+            "time_measuring",
+            "filter_order",
+            "ripple",
+            "max_start_search",
+            "max_end_search",
+            "min_start_search",
+            "min_end_search",
+            "bandwidths",
+            "max_iter_value",
+            "max_step_iter",
+            "default_step_iter",
+            "iter_value",
+        ])
 
-        self.source_filepath = ''
-        self.target_dirpath = ''
-        self.dict_bandwidth_data = {}
-        self.dict_extremums_data = {}
-        self.dict_showed_extremums = {}
-        self.total_count = 0
-        self.fs = None
-        self.list_times = []
-        self.list_data = []
-        self.tick_times = 0
+        self.settings = collections.namedtuple("Config", [
+            "source_filepath",
+            "target_dirpath",
+            "dict_bandwidth_data",
+            "dict_extremums_data",
+            "dict_showed_extremums",
+            "total_count",
+            "fs",
+            "list_times",
+            "list_data",
+            "tick_times",
+        ])
 
-        self.lineEditMaxStart.setText(str(self.max_start_search))
-        self.lineEditMaxEnd.setText(str(self.max_end_search))
-        self.lineEditMinStart.setText(str(self.min_start_search))
-        self.lineEditMinEnd.setText(str(self.min_end_search))
+        config = self.config
+        config.time_measuring = 0  #TODO:  unused
+        config.filter_order = FILTER_ORDER
+        config.ripple = RIPPLE
+        config.max_start_search = MAX_START_SEARCH
+        config.max_end_search = MAX_END_SEARCH
+        config.min_start_search = MIN_START_SEARCH
+        config.min_end_search = MIN_END_SEARCH
+        config.bandwidths = BANDWIDTHS
+        config.max_iter_value = MAX_ITER_VALUE
+        config.max_step_iter = MAX_STEP_ITER
+        config.default_step_iter = DEFAULT_STEP_ITER
+        config.iter_value = MAX_ITER_VALUE * DEFAULT_STEP_ITER / MAX_STEP_ITER
+
+        settings = self.settings
+        settings.source_filepath = ''
+        settings.target_dirpath = ''
+        settings.dict_bandwidth_data = {}
+        settings.dict_extremums_data = {}
+        settings.dict_showed_extremums = {}
+        settings.total_count = 0
+        settings.fs = None
+        settings.list_times = []
+        settings.list_data = []
+        settings.tick_times = 0
+
+        self.lineEditMaxStart.setText(str(self.config.max_start_search))
+        self.lineEditMaxEnd.setText(str(self.config.max_end_search))
+        self.lineEditMinStart.setText(str(self.config.min_start_search))
+        self.lineEditMinEnd.setText(str(self.config.min_end_search))
         self.lineEditMaxStart.returnPressed.connect(
                 self.change_text_line_extremums_edits
                 )
@@ -78,8 +104,8 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
 
         self.progressBar.setMaximum(100)
 
-        self.listWidget.addItems(['%s' % b for b in self.bandwidths])
-        self.listWidget.itemClicked.connect(self.list_item_activated)
+        self.listBandwidths.addItems(['%s' % b for b in self.config.bandwidths])
+        self.listBandwidths.itemClicked.connect(self.bandwidths_activated)
 
         self.graph = pg.PlotWidget(self.widget)
         self.graph.setGeometry(QtCore.QRect(0, 0, 830, 475))
@@ -123,13 +149,13 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.file_dialog_save = QFileDialog()
         self.file_dialog_save.setFileMode(4)
 
-        self.pushButton.clicked.connect(self.show_dialog_open)
-        self.pushButton_3.clicked.connect(self.add_new_bandwidth)
-        self.pushButton_4.clicked.connect(self.save_button_pressed)
+        self.buttonOpen.clicked.connect(self.show_dialog_open)
+        self.buttonAdd.clicked.connect(self.add_new_bandwidth)
+        self.buttonSave.clicked.connect(self.save_button_pressed)
 
         self.slider1.setMinimum(0)
-        self.slider1.setMaximum(self.max_step_iter)
-        self.slider1.setValue(self.default_step_iter)
+        self.slider1.setMaximum(self.config.max_step_iter)
+        self.slider1.setValue(self.config.default_step_iter)
         self.slider1.valueChanged.connect(self.change_value_slider)
 
         menubar = self.menuBar()
@@ -146,7 +172,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
             'min': {}
             }
 
-    def list_item_activated(self: dict, item: dict) -> bool:
+    def bandwidths_activated(self: dict, item: dict) -> bool:
         """handler change bandwidth.
         Returns - True if ok.
         """
@@ -162,8 +188,8 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         """
         if self.total_count == 0:
             return False
-        index = self.listWidget.currentRow()
-        bandwidth = self.bandwidths[index]
+        index = self.listBandwidths.currentRow()
+        bandwidth = self.config.bandwidths[index]
         self.dict_max_for_iter = {}
         if not '%s' % bandwidth in self.dict_bandwidth_data.keys():
             self.calc_add_bandwidth(bandwidth)
@@ -185,8 +211,8 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         """
         if self.total_count == 0:
             return False
-        index = self.listWidget.currentRow()
-        bandwidth = self.bandwidths[index]
+        index = self.listBandwidths.currentRow()
+        bandwidth = self.config.bandwidths[index]
         self.range_search_maxmums.setRegion([
                 float(self.lineEditMaxStart.text()),
                 float(self.lineEditMaxEnd.text())
@@ -255,8 +281,8 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         Returns - True if ok.
         """
         delta = 0
-        index = self.listWidget.currentRow()
-        bandwidth = self.bandwidths[index]
+        index = self.listBandwidths.currentRow()
+        bandwidth = self.config.bandwidths[index]
         self.calc_add_extremums(bandwidth, ext)
         dict_data = self.dict_extremums_data[ext]['%s' % bandwidth]
         showed_extremums = self.dict_showed_extremums[ext]
@@ -320,7 +346,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
     def add_new_bandwidth(self: dict) -> None:
         """handler event pressed button add bandwidth."""
         text = self.lineEdit_3.text()
-        self.listWidget.addItem(text)
+        self.listBandwidths.addItem(text)
         splitted_text = text.split(',')
         value = [
                 int(splitted_text[0].replace('[', '')),
@@ -352,9 +378,9 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
                                                     './')[0]
         if not self.source_filepath:
             return False
-        item = self.listWidget.item(0)
+        item = self.listBandwidths.item(0)
         item.setSelected(True)
-        self.listWidget.setCurrentItem(item)
+        self.listBandwidths.setCurrentItem(item)
         self.prepare_data()
         return True
 
@@ -378,7 +404,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         dict_curves_filtred = {}
         count = 0
         flag_new = False
-        self.listWidget.setHidden(1)
+        self.listBandwidths.setHidden(1)
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 1)
         pen2 = pg.mkPen(color=(255, 0, 0), width=15, style=QtCore.Qt.DashLine)
@@ -431,7 +457,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.show_graphic_filtered()
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
-        self.listWidget.setHidden(0)
+        self.listBandwidths.setHidden(0)
 
         return True
 
@@ -460,7 +486,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         count_rows = len(rows)
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 1)
-        self.listWidget.setHidden(1)
+        self.listBandwidths.setHidden(1)
         count = 0
         total_count = len(self.bandwidths)
         for bandwidth, dict_data in self.dict_bandwidth_data.items():
@@ -494,7 +520,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
                         )
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
-        self.listWidget.setHidden(0)
+        self.listBandwidths.setHidden(0)
 
     def close_button_pressed(self: dict) -> None:
         """Handler event pressed close button.
