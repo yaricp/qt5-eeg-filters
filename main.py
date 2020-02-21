@@ -9,11 +9,11 @@ import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
-                            QMainWindow,
-                            QAction,
-                            QFileDialog,
-                            QApplication
-                            )
+    QMainWindow,
+    QAction,
+    QFileDialog,
+    QApplication
+)
 
 import ui
 
@@ -61,7 +61,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         ])
 
         config = self.config
-        config.time_measuring = 0  #TODO:  unused
+        config.time_measuring = 0  # TODO:  unused
         config.filter_order = FILTER_ORDER
         config.ripple = RIPPLE
         config.max_start_search = MAX_START_SEARCH
@@ -91,21 +91,22 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.lineEditMinStart.setText(str(self.config.min_start_search))
         self.lineEditMinEnd.setText(str(self.config.min_end_search))
         self.lineEditMaxStart.returnPressed.connect(
-                self.change_text_line_extremums_edits
-                )
+            self.change_text_line_extremums_edits
+        )
         self.lineEditMaxEnd.returnPressed.connect(
-                self.change_text_line_extremums_edits
-                )
+            self.change_text_line_extremums_edits
+        )
         self.lineEditMinStart.returnPressed.connect(
-                self.change_text_line_extremums_edits
-                )
+            self.change_text_line_extremums_edits
+        )
         self.lineEditMinEnd.returnPressed.connect(
-                self.change_text_line_extremums_edits
-                )
+            self.change_text_line_extremums_edits
+        )
 
         self.progressBar.setMaximum(100)
 
-        self.listBandwidths.addItems(['%s' % b for b in self.config.bandwidths])
+        self.listBandwidths.addItems(
+            ['%s' % b for b in self.config.bandwidths])
         self.listBandwidths.itemClicked.connect(self.bandwidths_activated)
 
         self.graph = pg.PlotWidget(self.widget)
@@ -113,22 +114,22 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.graph.setBackground('w')
 
         self.range_search_maxmums = pg.LinearRegionItem(
-                [self.config.max_start_search, self.config.max_end_search])
+            [self.config.max_start_search, self.config.max_end_search])
         self.range_search_maxmums.setBrush(
-                QtGui.QBrush(QtGui.QColor(0, 0, 255, 50))
-                )
+            QtGui.QBrush(QtGui.QColor(0, 0, 255, 50))
+        )
         self.range_search_maxmums.sigRegionChangeFinished.connect(
-                self.change_range_search_extremums
-                )
+            self.change_range_search_extremums
+        )
 
         self.range_search_minimums = pg.LinearRegionItem(
-                [self.config.min_start_search, self.config.min_end_search])
+            [self.config.min_start_search, self.config.min_end_search])
         self.range_search_minimums.setBrush(
-                QtGui.QBrush(QtGui.QColor(0, 0, 50, 50))
-                )
+            QtGui.QBrush(QtGui.QColor(0, 0, 50, 50))
+        )
         self.range_search_minimums.sigRegionChangeFinished.connect(
-                self.change_range_search_extremums
-                )
+            self.change_range_search_extremums
+        )
 
         open_file_button = QAction(QIcon('open.png'), 'Open', self)
         open_file_button.setShortcut('Ctrl+O')
@@ -171,7 +172,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.settings.dict_extremums_data = {
             'max': {},
             'min': {}
-            }
+        }
 
     def bandwidths_activated(self: dict, item: dict) -> bool:
         """handler change bandwidth.
@@ -180,6 +181,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         if item.text() == 'source' and not self.config.source_filepath:
             self.show_dialog_open()
             return True
+
         self.show_graphic_filtered()
         return True
 
@@ -189,11 +191,13 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         """
         if self.settings.total_count == 0:
             return False
+
         index = self.listBandwidths.currentRow()
         bandwidth = self.config.bandwidths[index]
         self.dict_max_for_iter = {}
         if not '%s' % bandwidth in self.settings.dict_bandwidth_data.keys():
             self.calc_add_bandwidth(bandwidth)
+
         delta = 0
         dict_data = self.settings.dict_bandwidth_data['%s' % bandwidth]
         count = 0
@@ -203,6 +207,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
             graph_item = self.graph.getPlotItem().dataItems[count]
             graph_item.setData(self.settings.tick_times,  y,)
             count += 1
+
         self.show_graphic_extremums()
         return True
 
@@ -215,13 +220,13 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         index = self.listBandwidths.currentRow()
         bandwidth = self.config.bandwidths[index]
         self.range_search_maxmums.setRegion([
-                float(self.lineEditMaxStart.text()),
-                float(self.lineEditMaxEnd.text())
-                ])
+            float(self.lineEditMaxStart.text()),
+            float(self.lineEditMaxEnd.text())
+        ])
         self.range_search_minimums.setRegion([
-                float(self.lineEditMinStart.text()),
-                float(self.lineEditMinEnd.text())
-                ])
+            float(self.lineEditMinStart.text()),
+            float(self.lineEditMinEnd.text())
+        ])
         if not '%s' % bandwidth in self.settings.dict_extremums_data:
             self.calc_add_extremums(bandwidth, 'max')
             self.calc_add_extremums(bandwidth, 'min')
@@ -243,14 +248,14 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         if self.settings.total_count == 0 or not self.settings.dict_showed_extremums:
             return False
         self.range_search_maxmums.setRegion([
-                float(self.lineEditMaxStart.text()),
-                float(self.lineEditMaxEnd.text())
-                ])
+            float(self.lineEditMaxStart.text()),
+            float(self.lineEditMaxEnd.text())
+        ])
         self.reshow_extremums('max')
         self.range_search_minimums.setRegion([
-                float(self.lineEditMinStart.text()),
-                float(self.lineEditMinEnd.text())
-                ])
+            float(self.lineEditMinStart.text()),
+            float(self.lineEditMinEnd.text())
+        ])
         self.reshow_extremums('min')
         return True
 
@@ -264,16 +269,16 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         if self.settings.total_count == 0 or not self.settings.dict_showed_extremums:
             return False
         self.lineEditMaxStart.setText(
-                str(round(self.range_search_maxmums.getRegion()[0], 5))
-                )
+            str(round(self.range_search_maxmums.getRegion()[0], 5))
+        )
         self.lineEditMaxEnd.setText(
-                str(round(self.range_search_maxmums.getRegion()[1], 5)))
+            str(round(self.range_search_maxmums.getRegion()[1], 5)))
         self.reshow_extremums('max')
         self.lineEditMinStart.setText(
-                str(round(self.range_search_minimums.getRegion()[0], 5))
-                )
+            str(round(self.range_search_minimums.getRegion()[0], 5))
+        )
         self.lineEditMinEnd.setText(
-                str(round(self.range_search_minimums.getRegion()[1], 5)))
+            str(round(self.range_search_minimums.getRegion()[1], 5)))
         self.reshow_extremums('min')
         return True
 
@@ -297,10 +302,10 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         return True
 
     def calc_add_extremums(
-                            self: dict,
-                            bandwidth: list,
-                            ext: str
-                            ) -> bool:
+        self: dict,
+        bandwidth: list,
+        ext: str
+    ) -> bool:
         """Calculate extremums on curvey.
         Returns - True if ok.
         """
@@ -313,15 +318,15 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         dict_data_extremums = {}
 
         for time_stamp, row in dict_data.items():
-
             dict_data_extremums.update({
                 time_stamp: search_max_min(
-                        self.settings.tick_times,
-                        row,
-                        where_find,
-                        ext
-                        )
-                })
+                    self.settings.tick_times,
+                    row,
+                    where_find,
+                    ext
+                )
+            })
+
         dict_extremums.update({'%s' % bandwidth: dict_data_extremums})
         return True
 
@@ -332,16 +337,16 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         dict_curves_filtred = {}
         for key_curv, row in zip(self.settings.list_times, self.settings.list_data):
             filtred_data = make_filter(
-                                row,
-                                bandwidth,
-                                self.settings.fs,
-                                self.config.filter_order,
-                                self.config.ripple
-                                )
+                row,
+                bandwidth,
+                self.settings.fs,
+                self.config.filter_order,
+                self.config.ripple
+            )
             dict_curves_filtred.update({key_curv: filtred_data})
         self.settings.dict_bandwidth_data.update({
-                '%s' % bandwidth: dict_curves_filtred
-                })
+            '%s' % bandwidth: dict_curves_filtred
+        })
         return True
 
     def add_new_bandwidth(self: dict) -> None:
@@ -350,9 +355,9 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.listBandwidths.addItem(text)
         splitted_text = text.split(',')
         value = [
-                int(splitted_text[0].replace('[', '')),
-                int(splitted_text[1].replace(']', '').replace(' ', ''))
-                ]
+            int(splitted_text[0].replace('[', '')),
+            int(splitted_text[1].replace(']', '').replace(' ', ''))
+        ]
         self.config.bandwidths.append(value)
         self.lineEdit_3.clear()
 
@@ -361,10 +366,10 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         Returns - True if ok.
         """
         self.config.iter_value = (
-                self.slider1.value()
-                * self.config.max_iter_value
-                / self.config.max_step_iter
-                )
+            self.slider1.value()
+            * self.config.max_iter_value
+            / self.config.max_step_iter
+        )
         QApplication.processEvents()
         self.show_graphic_filtered()
         return True
@@ -374,9 +379,9 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         Returns - True if ok.
         """
         self.config.source_filepath = self.file_dialog_open.getOpenFileName(
-                                                    self,
-                                                    'Open source file',
-                                                    './')[0]
+            self,
+            'Open source file',
+            './')[0]
         if not self.config.source_filepath:
             return False
         item = self.listBandwidths.item(0)
@@ -421,8 +426,8 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
             #  prepare graph
             if flag_new:
                 self.graph.plot(
-                        name=time_stamp
-                        )
+                    name=time_stamp
+                )
         if flag_new:
             maximums = {}
             minimums = {}
@@ -432,30 +437,31 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
                 self.progressBar.setValue(progress)
                 QApplication.processEvents()
                 showed_max = self.graph.plot(
-                        [0, 0],
-                        [0, 0],
-                        name='max_%s' % time_stamp,
-                        symbol='o',
-                        pen=pen2,
-                        symbolSize=5,
-                        symbolBrush=('r')
-                        )
+                    [0, 0],
+                    [0, 0],
+                    name='max_%s' % time_stamp,
+                    symbol='o',
+                    pen=pen2,
+                    symbolSize=5,
+                    symbolBrush=('r')
+                )
                 showed_min = self.graph.plot(
-                        [0, 0],
-                        [0, 0],
-                        name='min_%s' % time_stamp,
-                        symbol='o',
-                        pen=pen2,
-                        symbolSize=5,
-                        symbolBrush=('b')
-                        )
+                    [0, 0],
+                    [0, 0],
+                    name='min_%s' % time_stamp,
+                    symbol='o',
+                    pen=pen2,
+                    symbolSize=5,
+                    symbolBrush=('b')
+                )
                 maximums.update({time_stamp: showed_max})
                 minimums.update({time_stamp: showed_min})
             self.settings.dict_showed_extremums.update({
-                            'max': maximums,
-                            'min': minimums
-                        })
-        self.settings.dict_bandwidth_data.update({'source': dict_curves_filtred})
+                'max': maximums,
+                'min': minimums
+            })
+        self.settings.dict_bandwidth_data.update(
+            {'source': dict_curves_filtred})
         self.show_graphic_filtered()
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
@@ -469,9 +475,9 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         """
         if not self.settings.target_dirpath:
             self.settings.target_dirpath = self.file_dialog_save.getExistingDirectory(
-                                    self,
-                                    'Save filtered data',
-                                    './')
+                self,
+                'Save filtered data',
+                './')
         if not self.settings.target_dirpath:
             return False
         QApplication.processEvents()
@@ -503,12 +509,13 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
                     bandwidth,
                     dict_data,
                     count_rows=count_rows
-                    )
+                )
                 dict_extremums_export = {}
                 for (key_max, row_max), (key_min, row_min) in zip(
-                    self.settings.dict_extremums_data['max'][bandwidth].items(),
+                    self.settings.dict_extremums_data['max'][bandwidth].items(
+                    ),
                     self.settings.dict_extremums_data['min'][bandwidth].items()
-                            ):
+                ):
                     if key_max != key_min:
                         print('key_max: ', key_max)
                         print('key_min: ', key_min)
@@ -516,10 +523,10 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
                         key_max: (row_max, row_min)})
 
                 export_extremums(
-                        self.settings.target_dirpath,
-                        bandwidth,
-                        dict_extremums_export
-                        )
+                    self.settings.target_dirpath,
+                    bandwidth,
+                    dict_extremums_export
+                )
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
         self.listBandwidths.setHidden(0)
