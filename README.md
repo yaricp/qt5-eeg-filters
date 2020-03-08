@@ -1,21 +1,22 @@
 # qt5-eeg-filters
 
-GUI for eeg-filters ( https://github.com/yaricp/eeg-filters ) based on Qt5.
+GUI for eeg-filters based on Qt5.
 
 ## Requirements
 
-Program require python >= 3.6 and python3-venv.
-It was tested on Ubuntu 18.04.
+Program require python >= 3.6
 
-Also packages are required:
+Also:
 
 * eeg-filters
 * pyQt5
 * pyqtgraph
 
-Note: You need to make sure you've installed Qt5 on your system.
+Note: You must have installed Qt5  on your PC.
 
 ## Installation
+
+
 
 ```
 $ git clone https://github.com/yaricp/qt5-eeg-filters.git
@@ -33,7 +34,7 @@ $ ./start.sh
 
 After that you can to see a main window of program:
 
-You can open a file with EEG signals or EP data.
+You can open a file with EEG signals data.
 This file you can get from NeuroExplorer4.4 by exporting data to ASCII format.
 
 When curves will be showed on main plot you can make a filter it by choosing bandwith in list of bandwidths.
