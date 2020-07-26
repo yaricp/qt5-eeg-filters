@@ -136,6 +136,8 @@ input/
 input
 output/
 output
+files/
+files
 
 *.e4p
 
