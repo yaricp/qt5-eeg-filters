@@ -512,20 +512,20 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
                 )
                 dict_extremums_export = {}
                 for (key_max, row_max), (key_min, row_min) in zip(
-                    self.settings.dict_extremums_data['max'][bandwidth].items(
-                    ),
+                    self.settings.dict_extremums_data['max'][bandwidth].items(),
                     self.settings.dict_extremums_data['min'][bandwidth].items()
                 ):
-                    if key_max != key_min:
-                        print('key_max: ', key_max)
-                        print('key_min: ', key_min)
                     dict_extremums_export.update({
                         key_max: (row_max, row_min)})
-
+                max_search_range = [round(x, 4) for x in self.range_search_maxmums.getRegion()]
+                min_search_range = [round(x, 4) for x in self.range_search_minimums.getRegion()]
+                times_ranges = (max_search_range, min_search_range)
                 export_extremums(
+                    self.config.source_filepath,
                     self.settings.target_dirpath,
                     bandwidth,
-                    dict_extremums_export
+                    dict_extremums_export,
+                    times_ranges
                 )
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
