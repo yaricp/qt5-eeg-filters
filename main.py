@@ -411,15 +411,17 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         dict_curves_filtred = {}
         count = 0
         flag_new = False
+        factor = 100
         self.listBandwidths.setHidden(1)
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 1)
         pen2 = pg.mkPen(color=(255, 0, 0), width=15, style=QtCore.Qt.DashLine)
         if not self.graph.getPlotItem().dataItems:
             flag_new = True
+            factor = 50
         for time_stamp, row in zip(self.settings.list_times, self.settings.list_data):
             count += 1
-            progress = count*50/self.settings.total_count
+            progress = count*factor/self.settings.total_count
             self.progressBar.setValue(progress)
             QApplication.processEvents()
             dict_curves_filtred.update({time_stamp: row})
