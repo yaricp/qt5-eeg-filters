@@ -5,6 +5,7 @@
 
 import collections
 import pyqtgraph as pg
+import numpy as np
 
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QIcon
@@ -21,6 +22,11 @@ from eeg_filters import upload as eeg_filters_upload
 from eeg_filters.filters import make_filter, search_max_min
 from eeg_filters.export import export_curves, export_extremums
 from settings import *
+
+pg.setConfigOptions(antialias=True)
+
+#w = pg.GraphicsWindow()
+#w.setWindowTitle('Draggable')
 
 
 class MainWindow(QMainWindow, ui.Ui_MainWindow):
@@ -233,6 +239,14 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.graph.addItem(self.range_search_maxmums)
         self.reshow_extremums('max')
         self.graph.addItem(self.range_search_minimums)
+        from points import DraggablePoint
+        drg_point = DraggablePoint()
+        x = np.linspace(1, 100, 40)
+        pos = np.column_stack((x, np.sin(x)))
+
+        drg_point.setData(pos=pos, size=10, pxMode=True)
+
+        self.graph.addItem(drg_point)
         self.reshow_extremums('min')
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
@@ -540,6 +554,32 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         if self.settings.dict_bandwidth_data:
             self.save_button_pressed()
         QApplication.quit()
+
+    def mouseDragEvent(self, ev):
+        if ev.button() != QtCore.Qt.LeftButton:
+            ev.ignore()
+            return
+
+        if ev.isStart():
+            # We are already one step into the drag.
+            # Find the point(s) at the mouse cursor when the button was first 
+            # pressed:
+            pos = ev.buttonDownPos()
+            print(pos)
+            pts = self.scatter.pointsAt(pos)
+            if len(pts) == 0:
+                ev.ignore()
+                return
+            self.dragPoint = pts[0]
+            ind = pts[0].data()[0]
+            self.dragOffset = self.data['pos'][ind] - pos
+        elif ev.isFinish():
+            self.dragPoint = None
+            return
+        else:
+            if self.dragPoint is None:
+                ev.ignore()
+                return
 
 
 if __name__ == '__main__':
