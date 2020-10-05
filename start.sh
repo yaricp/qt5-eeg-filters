@@ -1,3 +1,3 @@
 #!/bin/bash
 
-venv3/bin/python main.py
+poetry run python main.py
