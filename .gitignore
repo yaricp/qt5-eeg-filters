@@ -142,3 +142,5 @@ files
 *.e4p
 
 *eric6*
+
+.idea*

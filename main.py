@@ -6,6 +6,7 @@
 import collections
 import pyqtgraph as pg
 import numpy as np
+from loguru import logger
 
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QIcon
@@ -16,24 +17,24 @@ from PyQt5.QtWidgets import (
     QApplication
 )
 
-import ui
-
 from eeg_filters import upload as eeg_filters_upload
 from eeg_filters.filters import make_filter, search_max_min
 from eeg_filters.export import export_curves, export_extremums
+
+import ui
 from settings import *
+from points import DraggablePoint
 
 pg.setConfigOptions(antialias=True)
 
-#w = pg.GraphicsWindow()
-#w.setWindowTitle('Draggable')
+pen2 = pg.mkPen(color=(255, 0, 0), width=15, style=QtCore.Qt.DashLine)
 
 
 class MainWindow(QMainWindow, ui.Ui_MainWindow):
 
     """Main windows of programm."""
 
-    def __init__(self: dict) -> None:
+    def __init__(self) -> None:
         """initialization and prepare data."""
         super().__init__()
         self.setupUi(self)
@@ -124,6 +125,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.range_search_maxmums.setBrush(
             QtGui.QBrush(QtGui.QColor(0, 0, 255, 50))
         )
+        self.range_search_maxmums.setZValue(-10)
         self.range_search_maxmums.sigRegionChangeFinished.connect(
             self.change_range_search_extremums
         )
@@ -133,6 +135,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.range_search_minimums.setBrush(
             QtGui.QBrush(QtGui.QColor(0, 0, 50, 50))
         )
+        self.range_search_minimums.setZValue(-10)
         self.range_search_minimums.sigRegionChangeFinished.connect(
             self.change_range_search_extremums
         )
@@ -172,7 +175,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         file_menu.addAction(save_file_button)
         file_menu.addAction(close_file_button)
 
-    def __clear_extremums(self: dict) -> None:
+    def __clear_extremums(self) -> None:
         """ Clear dict of extremums."""
 
         self.settings.dict_extremums_data = {
@@ -180,7 +183,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
             'min': {}
         }
 
-    def bandwidths_activated(self: dict, item: dict) -> bool:
+    def bandwidths_activated(self, item) -> bool:
         """handler change bandwidth.
         Returns - True if ok.
         """
@@ -191,7 +194,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.show_graphic_filtered()
         return True
 
-    def show_graphic_filtered(self: dict) -> bool:
+    def show_graphic_filtered(self) -> bool:
         """draw plot of filtered data.
         Returns - True if ok.
         """
@@ -206,18 +209,24 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
 
         delta = 0
         dict_data = self.settings.dict_bandwidth_data['%s' % bandwidth]
+        logger.debug(dict_data)
         count = 0
-        for row in dict_data.values():
+        showed_maxs = self.settings.dict_showed_extremums["max"]
+        showed_mins = self.settings.dict_showed_extremums["min"]
+        for time_stamp, row in dict_data.items():
             delta -= self.config.iter_value  # + last_max_value
             y = row + delta
             graph_item = self.graph.getPlotItem().dataItems[count]
+            logger.debug(type(showed_maxs[time_stamp]))
+            showed_maxs[time_stamp].curve = y
+            showed_mins[time_stamp].curve = y
             graph_item.setData(self.settings.tick_times,  y,)
             count += 1
 
         self.show_graphic_extremums()
         return True
 
-    def show_graphic_extremums(self: dict) -> bool:
+    def show_graphic_extremums(self) -> bool:
         """draw plot of extremums.
         Returns - True if ok.
         """
@@ -237,22 +246,15 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
             self.calc_add_extremums(bandwidth, 'max')
             self.calc_add_extremums(bandwidth, 'min')
         self.graph.addItem(self.range_search_maxmums)
-        self.reshow_extremums('max')
+
         self.graph.addItem(self.range_search_minimums)
-        from points import DraggablePoint
-        drg_point = DraggablePoint()
-        x = np.linspace(1, 100, 40)
-        pos = np.column_stack((x, np.sin(x)))
-
-        drg_point.setData(pos=pos, size=10, pxMode=True)
-
-        self.graph.addItem(drg_point)
+        self.reshow_extremums('max')
         self.reshow_extremums('min')
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
         return True
 
-    def change_text_line_extremums_edits(self: dict) -> bool:
+    def change_text_line_extremums_edits(self) -> bool:
         """
         Handler event change text search extremums.
 
@@ -273,7 +275,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.reshow_extremums('min')
         return True
 
-    def change_range_search_extremums(self: dict) -> bool:
+    def change_range_search_extremums(self) -> bool:
         """
         Handler event change region search extremums.
 
@@ -296,7 +298,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.reshow_extremums('min')
         return True
 
-    def reshow_extremums(self: dict, ext: str) -> bool:
+    def reshow_extremums(self, ext: str) -> bool:
         """draw plot of extremums.
         Returns - True if ok.
         """
@@ -305,18 +307,26 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         bandwidth = self.config.bandwidths[index]
         self.calc_add_extremums(bandwidth, ext)
         dict_data = self.settings.dict_extremums_data[ext]['%s' % bandwidth]
+
         showed_extremums = self.settings.dict_showed_extremums[ext]
         for time_stamp, row in dict_data.items():
             delta -= self.config.iter_value  # + last_max_value
             time_extremum = row[0]
             value_extremum = row[1] + delta
             showed_extremum = showed_extremums[time_stamp]
-            showed_extremum.setData([time_extremum, ], [value_extremum, ])
+            # showed_min = DraggablePoint()
+            # showed_extremum.setData(spots=[{
+            #     "pos": (time_extremum, value_extremum),
+            # # }])
+            # showed_extremum.setData(
+            #     pos = np.ndarray((time_extremum, value_extremum))
+            #     )
+            showed_extremum.setZValue(1000)
             showed_extremums.update({ext: {time_stamp: showed_extremum}})
         return True
 
     def calc_add_extremums(
-        self: dict,
+        self,
         bandwidth: list,
         ext: str
     ) -> bool:
@@ -332,6 +342,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         dict_data_extremums = {}
 
         for time_stamp, row in dict_data.items():
+
             dict_data_extremums.update({
                 time_stamp: search_max_min(
                     self.settings.tick_times,
@@ -344,7 +355,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         dict_extremums.update({'%s' % bandwidth: dict_data_extremums})
         return True
 
-    def calc_add_bandwidth(self: dict, bandwidth: list) -> bool:
+    def calc_add_bandwidth(self, bandwidth: list) -> bool:
         """Make filter of curves.
         Returns - True if ok.
         """
@@ -363,7 +374,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         })
         return True
 
-    def add_new_bandwidth(self: dict) -> None:
+    def add_new_bandwidth(self) -> None:
         """handler event pressed button add bandwidth."""
         text = self.lineEdit_3.text()
         self.listBandwidths.addItem(text)
@@ -375,7 +386,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.config.bandwidths.append(value)
         self.lineEdit_3.clear()
 
-    def change_value_slider(self: dict) -> bool:
+    def change_value_slider(self) -> bool:
         """Handler event change value slider.
         Returns - True if ok.
         """
@@ -388,7 +399,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.show_graphic_filtered()
         return True
 
-    def show_dialog_open(self: dict) -> bool:
+    def show_dialog_open(self) -> bool:
         """Show dialog window.
         Returns - True if ok.
         """
@@ -404,7 +415,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.prepare_data()
         return True
 
-    def prepare_data(self: dict) -> bool:
+    def prepare_data(self) -> bool:
         """Prepare data and plot after load data.
         Returns - True if ok.
         """
@@ -429,7 +440,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.listBandwidths.setHidden(1)
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 1)
-        pen2 = pg.mkPen(color=(255, 0, 0), width=15, style=QtCore.Qt.DashLine)
+
         if not self.graph.getPlotItem().dataItems:
             flag_new = True
             factor = 50
@@ -452,24 +463,29 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
                 progress = count*50/self.settings.total_count
                 self.progressBar.setValue(progress)
                 QApplication.processEvents()
-                showed_max = self.graph.plot(
-                    [0, 0],
-                    [0, 0],
+                showed_max = DraggablePoint()
+                showed_max.setData(
+                    pos=np.array([[0, 0]]),
                     name='max_%s' % time_stamp,
                     symbol='o',
                     pen=pen2,
-                    symbolSize=5,
+                    symbolSize=10,
                     symbolBrush=('r')
                 )
-                showed_min = self.graph.plot(
-                    [0, 0],
-                    [0, 0],
-                    name='min_%s' % time_stamp,
+                showed_max.setZValue(1000)
+                self.graph.addItem(showed_max)
+                showed_min = DraggablePoint()
+                showed_min.setData(pos=np.array([[0, 0]]),
+                    name='max_%s' % time_stamp,
                     symbol='o',
                     pen=pen2,
-                    symbolSize=5,
-                    symbolBrush=('b')
+                    symbolSize=1,
+                    symbolBrush=('g')
                 )
+                showed_min.setZValue(1000)
+                logger.debug(showed_min)
+                logger.debug(type(showed_min))
+                self.graph.addItem(showed_min)
                 maximums.update({time_stamp: showed_max})
                 minimums.update({time_stamp: showed_min})
             self.settings.dict_showed_extremums.update({
@@ -485,7 +501,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
 
         return True
 
-    def save_button_pressed(self: dict) -> bool:
+    def save_button_pressed(self) -> bool:
         """handler event save button pressed.
         Returns - True if ok.
         """
@@ -500,7 +516,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.export_data()
         return True
 
-    def export_data(self: dict) -> None:
+    def export_data(self) -> None:
         """Export curves and extremums in files.
         Returns - None.
         """
@@ -547,39 +563,13 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.progressBar.setProperty('visible', 0)
         self.listBandwidths.setHidden(0)
 
-    def close_button_pressed(self: dict) -> None:
+    def close_button_pressed(self) -> None:
         """Handler event pressed close button.
         Returns: None.
         """
         if self.settings.dict_bandwidth_data:
             self.save_button_pressed()
         QApplication.quit()
-
-    def mouseDragEvent(self, ev):
-        if ev.button() != QtCore.Qt.LeftButton:
-            ev.ignore()
-            return
-
-        if ev.isStart():
-            # We are already one step into the drag.
-            # Find the point(s) at the mouse cursor when the button was first 
-            # pressed:
-            pos = ev.buttonDownPos()
-            print(pos)
-            pts = self.scatter.pointsAt(pos)
-            if len(pts) == 0:
-                ev.ignore()
-                return
-            self.dragPoint = pts[0]
-            ind = pts[0].data()[0]
-            self.dragOffset = self.data['pos'][ind] - pos
-        elif ev.isFinish():
-            self.dragPoint = None
-            return
-        else:
-            if self.dragPoint is None:
-                ev.ignore()
-                return
 
 
 if __name__ == '__main__':
