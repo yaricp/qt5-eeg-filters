@@ -27,7 +27,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
 
     """Main windows of programm."""
 
-    def __init__(self: dict) -> None:
+    def __init__(self) -> None:
         """initialization and prepare data."""
         super().__init__()
         self.setupUi(self)
@@ -166,7 +166,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         file_menu.addAction(save_file_button)
         file_menu.addAction(close_file_button)
 
-    def __clear_extremums(self: dict) -> None:
+    def __clear_extremums(self) -> None:
         """ Clear dict of extremums."""
 
         self.settings.dict_extremums_data = {
@@ -174,7 +174,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
             'min': {}
         }
 
-    def bandwidths_activated(self: dict, item: dict) -> bool:
+    def bandwidths_activated(self, item) -> bool:
         """handler change bandwidth.
         Returns - True if ok.
         """
@@ -185,7 +185,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.show_graphic_filtered()
         return True
 
-    def show_graphic_filtered(self: dict) -> bool:
+    def show_graphic_filtered(self) -> bool:
         """draw plot of filtered data.
         Returns - True if ok.
         """
@@ -211,7 +211,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.show_graphic_extremums()
         return True
 
-    def show_graphic_extremums(self: dict) -> bool:
+    def show_graphic_extremums(self) -> bool:
         """draw plot of extremums.
         Returns - True if ok.
         """
@@ -238,7 +238,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.progressBar.setProperty('visible', 0)
         return True
 
-    def change_text_line_extremums_edits(self: dict) -> bool:
+    def change_text_line_extremums_edits(self) -> bool:
         """
         Handler event change text search extremums.
 
@@ -259,7 +259,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.reshow_extremums('min')
         return True
 
-    def change_range_search_extremums(self: dict) -> bool:
+    def change_range_search_extremums(self) -> bool:
         """
         Handler event change region search extremums.
 
@@ -282,7 +282,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.reshow_extremums('min')
         return True
 
-    def reshow_extremums(self: dict, ext: str) -> bool:
+    def reshow_extremums(self, ext: str) -> bool:
         """draw plot of extremums.
         Returns - True if ok.
         """
@@ -302,7 +302,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         return True
 
     def calc_add_extremums(
-        self: dict,
+        self,
         bandwidth: list,
         ext: str
     ) -> bool:
@@ -330,7 +330,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         dict_extremums.update({'%s' % bandwidth: dict_data_extremums})
         return True
 
-    def calc_add_bandwidth(self: dict, bandwidth: list) -> bool:
+    def calc_add_bandwidth(self, bandwidth: list) -> bool:
         """Make filter of curves.
         Returns - True if ok.
         """
@@ -349,7 +349,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         })
         return True
 
-    def add_new_bandwidth(self: dict) -> None:
+    def add_new_bandwidth(self) -> None:
         """handler event pressed button add bandwidth."""
         text = self.lineEdit_3.text()
         self.listBandwidths.addItem(text)
@@ -361,7 +361,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.config.bandwidths.append(value)
         self.lineEdit_3.clear()
 
-    def change_value_slider(self: dict) -> bool:
+    def change_value_slider(self) -> bool:
         """Handler event change value slider.
         Returns - True if ok.
         """
@@ -374,7 +374,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.show_graphic_filtered()
         return True
 
-    def show_dialog_open(self: dict) -> bool:
+    def show_dialog_open(self) -> bool:
         """Show dialog window.
         Returns - True if ok.
         """
@@ -390,7 +390,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.prepare_data()
         return True
 
-    def prepare_data(self: dict) -> bool:
+    def prepare_data(self) -> bool:
         """Prepare data and plot after load data.
         Returns - True if ok.
         """
@@ -471,7 +471,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
 
         return True
 
-    def save_button_pressed(self: dict) -> bool:
+    def save_button_pressed(self) -> bool:
         """handler event save button pressed.
         Returns - True if ok.
         """
@@ -486,7 +486,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.export_data()
         return True
 
-    def export_data(self: dict) -> None:
+    def export_data(self) -> None:
         """Export curves and extremums in files.
         Returns - None.
         """
@@ -533,7 +533,7 @@ class MainWindow(QMainWindow, ui.Ui_MainWindow):
         self.progressBar.setProperty('visible', 0)
         self.listBandwidths.setHidden(0)
 
-    def close_button_pressed(self: dict) -> None:
+    def close_button_pressed(self) -> None:
         """Handler event pressed close button.
         Returns: None.
         """
