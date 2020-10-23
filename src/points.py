@@ -24,10 +24,8 @@ class DraggablePoint(pg.GraphItem):
         self.data = kwds
         if 'pos' in self.data:
             npts = self.data['pos'].shape[0]
-            # logger.debug(npts)
             self.data['adj'] = np.column_stack((np.arange(0, npts-1), np.arange(1, npts)))
             self.data['data'] = np.empty(npts, dtype=[('index', int)])
-            # logger.debug(self.data['data'])
             self.data['data']['index'] = np.arange(npts)
         self.update_graph()
 
@@ -62,7 +60,6 @@ class DraggablePoint(pg.GraphItem):
         ind = self.curve.index[self.curve.index.get_loc(new_x, method="nearest")]
         new_y = self.curve.loc[ind].to_list()[0]
         self.data['pos'] = np.array([[ind, new_y]])
-        logger.debug(new_y)
         self.controller.change_extremum_data(new_x, new_y, *self.model_params)
         self.update_graph()
         ev.accept()
