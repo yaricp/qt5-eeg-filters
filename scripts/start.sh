@@ -2,4 +2,4 @@
 
 cd ../
 export PATH=$PATH:$HOME/.local/bin
-poetry run python main.py
+poetry run python src/main.py
