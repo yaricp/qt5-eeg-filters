@@ -53,17 +53,14 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.range_search_maxmums.setBrush(
             QtGui.QBrush(QtGui.QColor(0, 0, 255, 50))
         )
-        self.range_search_maxmums.setZValue(-10)
         self.maximums_region_changed_event = self.range_search_maxmums.sigRegionChangeFinished
 
         self.range_search_minimums = pg.LinearRegionItem(
             [self.min_start_search, self.min_end_search]
         )
-        self.range_search_minimums.setZValue(-1)
         self.range_search_minimums.setBrush(
             QtGui.QBrush(QtGui.QColor(0, 0, 50, 50))
         )
-        self.range_search_minimums.setZValue(-10)
         self.minimums_region_changed_event = self.range_search_minimums.sigRegionChangeFinished
 
         open_file_button = QAction(QIcon('open.png'), 'Open', self)
@@ -110,7 +107,8 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             tick_times,
             total_count
     ) -> bool:
-        """draw plot of filtered data.
+        """
+        Draw plot of filtered data.
         Returns - True if ok.
         """
         if total_count == 0:
@@ -131,7 +129,8 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         return True
 
     def show_range_extremums(self, total_count) -> bool:
-        """draw regions where will search maximums and minimums of curves.
+        """
+        Draw regions where will search maximums and minimums of curves.
         Returns - True if ok.
         """
         # logger.debug("start show graph extrem")
@@ -173,43 +172,48 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         return True
 
     def show_progress_bar(self):
+        """Show progress bar and hide section of bandwidths."""
         self.listBandwidths.setHidden(1)
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 1)
 
     def hide_progress_bar(self):
+        """Hide progress bar and show section of bandwidths."""
         self.progressBar.setValue(0)
         self.progressBar.setProperty('visible', 0)
         self.listBandwidths.setHidden(0)
 
     def is_graph_empty(self):
+        """Check is Graph empty."""
         if not self.graph.getPlotItem().dataItems:
             return True
         return False
 
     def set_progress_value(self, value):
+        """Set value of progress of process."""
         self.progressBar.setValue(value)
         QApplication.processEvents()
 
     def add_ranges_extremums(self):
+        """Add regions for search extremums."""
         self.graph.addItem(self.range_search_maxmums)
-        self.graph.getPlotItem().items[-1].setZValue(-1)
         self.graph.addItem(self.range_search_minimums)
-        self.graph.getPlotItem().items[-1].setZValue(-1)
         pass
 
     def create_graph(self, time_stamp):
+        """Create new plot for new curve."""
         self.graph.plot(
             name=time_stamp
         )
 
     def get_ranges_extremums(self):
+        """Get values of bounds of regions for search extremums."""
         max_search_range = [round(x, 4) for x in self.range_search_maxmums.getRegion()]
         min_search_range = [round(x, 4) for x in self.range_search_minimums.getRegion()]
         return max_search_range, min_search_range
 
     def add_point_extremums(self, time_stamp):
-        # logger.debug("add draggable point")
+        """Add new draggable points to the main graph."""
 
         from points import DraggablePoint
 
@@ -224,7 +228,6 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             symbolBrush='r'
         )
         self.graph.addItem(showed_max)
-        self.graph.getPlotItem().items[-1].setZValue(10000000)
 
         showed_min = DraggablePoint()
         showed_min.controller = self.main_window.controller
@@ -237,17 +240,18 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             symbolBrush='b'
         )
         self.graph.addItem(showed_min)
-        self.graph.getPlotItem().items[-1].setZValue(10000000)
 
         return showed_max, showed_min
 
     def get_source_file_name(self):
+        """Get name of source file."""
         return self.file_dialog_open.getOpenFileName(
             self,
             'Open source file',
             './')[0]
 
     def get_target_file_name(self):
+        """Get name of target file."""
         return self.file_dialog_save.getExistingDirectory(
             self,
             'Save filtered data',

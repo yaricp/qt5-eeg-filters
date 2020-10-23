@@ -11,7 +11,8 @@ class Handler:
         self.controller = controller
 
     def bandwidths_activated(self, item) -> None:
-        """handler change bandwidth.
+        """
+        Handler change bandwidth.
         Returns - True if ok.
         """
         if item.text() == 'source' and not self.config.source_filepath:
@@ -51,7 +52,8 @@ class Handler:
         self.view.hide_progress_bar()
 
     def change_value_slider(self) -> bool:
-        """Handler event change value slider.
+        """
+        Handler event change value slider.
         Returns - True if ok.
         """
         self.view.iter_value = (
@@ -68,7 +70,8 @@ class Handler:
         return True
 
     def show_dialog_open(self) -> bool:
-        """Show dialog window.
+        """
+        Show dialog window.
         Returns - True if ok.
         """
         self.config.source_filepath = self.view.get_source_file_name()
@@ -87,7 +90,8 @@ class Handler:
         return True
 
     def save_button_pressed(self) -> bool:
-        """handler event save button pressed.
+        """
+        Handler event save button pressed.
         Returns - True if ok.
         """
         if not self.config.target_dirpath:
@@ -103,7 +107,7 @@ class Handler:
         return True
 
     def hide_show_regions(self):
-        # logger.debug("start hiding")
+        """Handler click button for show and hide regions for search extremum."""
         if self.view.range_search_minimums.isVisible():
             self.view.range_search_minimums.setVisible(0)
             self.view.range_search_maxmums.setVisible(0)
@@ -112,7 +116,8 @@ class Handler:
         self.view.range_search_maxmums.setVisible(1)
 
     def close_button_pressed(self) -> None:
-        """Handler event pressed close button.
+        """
+        Handler event pressed close button.
         Returns: None.
         """
         if self.model.dict_bandwidth_data:
@@ -144,7 +149,7 @@ class Handler:
         return True
 
     def add_new_bandwidth(self) -> None:
-        """handler event pressed button add bandwidth."""
+        """Handler event pressed button add bandwidth."""
         text = self.view.lineEdit_3.text()
         self.view.listBandwidths.addItem(text)
         splitted_text = text.split(',')

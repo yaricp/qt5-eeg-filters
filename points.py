@@ -30,12 +30,12 @@ class DraggablePoint(pg.GraphItem):
             # logger.debug(self.data['data'])
             self.data['data']['index'] = np.arange(npts)
         self.update_graph()
-        self.setZValue(1000)
 
     def update_graph(self):
         pg.GraphItem.setData(self, **self.data)
 
     def mouseDragEvent(self, ev):
+        """Hook of mouse drag event"""
         if ev.button() != QtCore.Qt.LeftButton:
             ev.ignore()
             return

@@ -18,7 +18,9 @@ class Controller:
         self.counter_factor = 100
 
     def calc_add_extremums(self, bandwidth: list, ext: str) -> bool:
-        """Calculate extremums on curvey.
+        """
+        Calculate extremums on curves.
+        It use package eeg-filters and function search_max_min().
         Returns - True if ok.
         """
         range_search = self.view.range_search_maxmums
@@ -47,7 +49,9 @@ class Controller:
         return True
 
     def calc_add_bandwidth(self, bandwidth: list) -> bool:
-        """Make filter of curves.
+        """
+        Make filter of curves.
+        It use package eeg-filters and function make_filter.
         Returns - True if ok.
         """
         dict_curves_filtred = {}
@@ -125,6 +129,7 @@ class Controller:
             {'source': dict_curves_filtred})
 
     def get_data_show_graphics(self):
+        """Get all data for plots and call functions for show plots."""
         index = self.view.listBandwidths.currentRow()
         bandwidth = self.config.bandwidths[index]
 
@@ -142,6 +147,10 @@ class Controller:
         self.calc_and_show_extremums(bandwidth)
 
     def calc_and_show_extremums(self, bandwidth=None):
+        """
+        Calculate extremums points in regions.
+        Call function for show plots.
+        """
         if not bandwidth:
             index = self.view.listBandwidths.currentRow()
             bandwidth = self.config.bandwidths[index]
@@ -162,7 +171,8 @@ class Controller:
             )
 
     def export_data(self) -> None:
-        """Export curves and extremums in files.
+        """
+        Export curves and extremums in files.
         Returns - None.
         """
 
