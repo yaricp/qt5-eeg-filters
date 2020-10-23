@@ -1,36 +1,42 @@
 import numpy as np
+import pandas as pd
 import pyqtgraph as pg
 from PyQt5 import QtCore
 from loguru import logger
 
 
 class DraggablePoint(pg.GraphItem):
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, **kwargs):
         self.dragPoint = None
         self.dragOffset = None
-        self.curve = []
-        if "curve" in kwargs and kwargs["curve"]:
-            self.curve = kwargs["curve"]
+        self.curve = None
+        self.data = None
+        self.controller = None
+        self.model_params = None
 
-        pg.GraphItem.__init__(self, *args, **kwargs)
+        pg.GraphItem.__init__(self, **kwargs)
+
+    def set_curve(self, x, y):
+        self.curve = pd.DataFrame(pd.Series(y, index=x, name="Y"))
 
     def setData(self, **kwds):
         self.data = kwds
         if 'pos' in self.data:
             npts = self.data['pos'].shape[0]
+            # logger.debug(npts)
             self.data['adj'] = np.column_stack((np.arange(0, npts-1), np.arange(1, npts)))
             self.data['data'] = np.empty(npts, dtype=[('index', int)])
+            # logger.debug(self.data['data'])
             self.data['data']['index'] = np.arange(npts)
-        self.updateGraph()
+        self.update_graph()
+        self.setZValue(1000)
 
-    def updateGraph(self):
-        if 'pos' in self.data:
-            logger.debug(self.data['pos'][0])
+    def update_graph(self):
         pg.GraphItem.setData(self, **self.data)
 
     def mouseDragEvent(self, ev):
         if ev.button() != QtCore.Qt.LeftButton:
-            logger.debug('mouse button')
             ev.ignore()
             return
 
@@ -42,8 +48,8 @@ class DraggablePoint(pg.GraphItem):
                 return
             self.dragPoint = pts[0]
             ind = pts[0].data()[0]
-            self.dragOffset = self.data['pos'][ind][1] - pos[1]
-            logger.debug('isStart')
+            self.dragOffset = self.data['pos'][ind][0] - pos[0]
+
         elif ev.isFinish():
             self.dragPoint = None
             return
@@ -52,10 +58,11 @@ class DraggablePoint(pg.GraphItem):
                 ev.ignore()
                 return
 
-        ind = self.dragPoint.data()[0]
-        self.data['pos'] = np.array([[ev.pos()[0] + self.dragOffset, 0.0]])
-
-        logger.debug(type(self.data['pos']))
-        logger.debug(ev.pos()[0] + self.dragOffset)
-        self.updateGraph()
+        new_x = round(ev.pos()[0] + self.dragOffset, 4)
+        ind = self.curve.index[self.curve.index.get_loc(new_x, method="nearest")]
+        new_y = self.curve.loc[ind].to_list()[0]
+        self.data['pos'] = np.array([[ind, new_y]])
+        logger.debug(new_y)
+        self.controller.change_extremum_data(new_x, new_y, *self.model_params)
+        self.update_graph()
         ev.accept()
