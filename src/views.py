@@ -17,14 +17,13 @@ pen2 = pg.mkPen(color=(255, 0, 0), width=15, style=QtCore.Qt.DashLine)
 
 
 class ViewGraph(QMainWindow, ui.Ui_MainWindow):
+    resized = QtCore.pyqtSignal()
 
     def __init__(self, config, main=None) -> None:
 
         super().__init__()
         self.setupUi(self)
-        self.graph = pg.PlotWidget(self.widget)
-        self.graph.setGeometry(QtCore.QRect(0, 0, 830, 475))
-        self.graph.setBackground('w')
+
         self.main_window = main
         self.iter_value = config.iter_value
         self.max_start_search = config.max_start_search
@@ -98,6 +97,10 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         file_menu.addAction(open_file_button)
         file_menu.addAction(save_file_button)
         file_menu.addAction(close_file_button)
+
+    def resizeEvent(self, event):
+        self.resized.emit()
+        return super(ViewGraph, self).resizeEvent(event)
 
     def show_graphic_filtered(
             self,

@@ -10,6 +10,45 @@ class Handler:
         self.view = view
         self.controller = controller
 
+    def reshow_elements_after_resize_main_window(self) -> None:
+        # logger.debug("Start resize windows %s" % self.view.width())
+        self.view.listBandwidths_pos = (
+            self.view.width() - self.view.listBandwidths_right_align,
+            self.view.listBandwidths_top_align
+        )
+        self.view.listBandwidths.setGeometry(*self.view.listBandwidths_pos, *self.view.listBandwidths_size)
+        self.view.buttonAdd_pos = (
+            self.view.width() - self.view.buttonAdd_right_align,
+            self.view.buttonAdd_top_align
+        )
+        self.view.buttonAdd.setGeometry(*self.view.buttonAdd_pos, *self.view.buttonAdd_size)
+        self.view.newBandwidthField_pos = (
+            self.view.width() - self.view.newBandwidthField_right_align,
+            self.view.newBandwidthField_top_align
+        )
+        self.view.newBandwidthField.setGeometry(*self.view.newBandwidthField_pos, *self.view.newBandwidthField_size)
+
+        self.view.graph_size = (
+            self.view.width() - self.view.graph_right_align,
+            self.view.height() - self.view.graph_bottom_align,
+        )
+        self.view.graph.setGeometry(*self.view.graph_pos, *self.view.graph_size)
+        self.view.slider1_pos = (
+            self.view.width() - self.view.slider1_right_align,
+            self.view.slider1_top_align
+        )
+        self.view.slider1_size = self.view.slider1_size[0], self.view.height() - self.view.graph_bottom_align
+        self.view.slider1.setGeometry(*self.view.slider1_pos, *self.view.slider1_size)
+        self.view.progressBar_pos = (
+            self.view.progressBar_left,
+            self.view.height() - self.view.progressBar_poz_bottom_align
+        )
+        self.view.progressBar_size = (
+            self.view.graph.width(),
+            self.view.progressBar_left
+        )
+        self.view.progressBar.setGeometry(*self.view.progressBar_pos, *self.view.progressBar_size)
+
     def bandwidths_activated(self, item) -> None:
         """
         Handler change bandwidth.
