@@ -1,6 +1,6 @@
 # qt5-eeg-filters
 
-GUI for eeg-filters based on Qt5.
+GUI for [eeg-filters](https://github.com/yaricp/eeg-filters) based on Qt5.
 
 ## Requirements
 
