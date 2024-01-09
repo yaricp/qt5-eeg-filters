@@ -85,8 +85,12 @@ class Ui_MainWindow(object):
 
 
         self.buttonVisibleRegion = QtWidgets.QPushButton(self.centralwidget)
-        self.buttonVisibleRegion .setGeometry(QtCore.QRect(440, 10, 83, 31))
-        self.buttonVisibleRegion .setObjectName("buttonVisibleRegion ")
+        self.buttonVisibleRegion.setGeometry(QtCore.QRect(440, 10, 83, 31))
+        self.buttonVisibleRegion.setObjectName("buttonVisibleRegion")
+
+        self.buttonStartSearch = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonStartSearch.setGeometry(QtCore.QRect(840, 10, 83, 31))
+        self.buttonStartSearch.setObjectName("buttonStartSearch")
 
         self.buttonSave = QtWidgets.QPushButton(self.centralwidget)
         self.buttonSave.setGeometry(QtCore.QRect(112, 10, 81, 31))
@@ -132,6 +136,7 @@ class Ui_MainWindow(object):
         self.buttonOpen.setText(_translate("MainWindow", "Open"))
         self.buttonAdd.setText(_translate("MainWindow", "Add"))
         self.buttonVisibleRegion.setText(_translate("MainWindow", "HideRegions"))
+        self.buttonStartSearch.setText(_translate("MainWindow", "StartSearch"))
         self.buttonSave.setText(_translate("MainWindow", "Save"))
         self.actionopen.setText(_translate("MainWindow", "open"))
         self.actionsave.setText(_translate("MainWindow", "save"))

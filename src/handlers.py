@@ -198,3 +198,10 @@ class Handler:
         ]
         self.config.bandwidths.append(value)
         self.view.lineEdit_3.clear()
+
+    def start_ep_passband_search(self) -> None:
+        """
+        Calls controller method.
+        """
+        self.controller.start_ep_passband_search()
+        self.view.lineEditMaxStart.setText("Oppa!start search!")

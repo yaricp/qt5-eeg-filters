@@ -50,6 +50,7 @@ class MainWindow:
         self.view.add_clicked_event.connect(self.handler.add_new_bandwidth)
         self.view.value_changed_event.connect(self.handler.change_value_slider)
         self.view.toggle_visible_regions_event.connect(self.handler.hide_show_regions)
+        self.view.start_ep_passband_search_event.connect(self.handler.start_ep_passband_search)
 
 
 if __name__ == '__main__':

@@ -7,10 +7,14 @@ from eeg_filters.export import export_curves, export_extremums
 from views import ViewGraph
 from models import Config, ModelData
 
+from passband_searcher import PassbandSearcher
+
 
 class Controller:
 
-    def __init__(self, config: Config, model: ModelData, view: ViewGraph):
+    def __init__(
+        self, config: Config, model: ModelData, view: ViewGraph
+    ):
         self.model = model
         self.view = view
         self.config = config
@@ -55,7 +59,9 @@ class Controller:
         Returns - True if ok.
         """
         dict_curves_filtred = {}
-        for key_curv, row in zip(self.model.list_times, self.model.list_data):
+        for key_curv, row in zip(
+            self.model.list_times, self.model.list_data
+        ):
             filtred_data = make_filter(
                 row,
                 bandwidth,
@@ -218,3 +224,19 @@ class Controller:
         """
         model = self.model.dict_extremums_data
         model[args[0]][args[1]][args[2]] = (time, value)
+
+    def start_ep_passband_search(self) -> None:
+        """
+        Starts EP bassband search
+        """
+        pbs = PassbandSearcher(
+            curves=[],
+            filter_borders={},
+            tick_times=[],
+            where_search_extremums=[],
+            check_average=True,
+            check_square=False,
+            config_filter={}
+        )
+        result = pbs.start()
+        print("Start!!!")

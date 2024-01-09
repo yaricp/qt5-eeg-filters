@@ -1,6 +1,0 @@
-eeg-filters
-pyQt5
-pyqtgraph
-loguru
-numpy
-pandas

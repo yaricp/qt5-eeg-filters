@@ -1,0 +1,5 @@
+docker
+scripts
+.env
+.git
+docker-compose.yml

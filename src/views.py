@@ -86,6 +86,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.add_clicked_event = self.buttonAdd.clicked
         self.save_clicked_event = self.buttonSave.clicked
         self.toggle_visible_regions_event = self.buttonVisibleRegion.clicked
+        self.start_ep_passband_search_event = self.buttonStartSearch.clicked
 
         self.slider1.setMinimum(0)
         self.slider1.setMaximum(self.max_step_iter)

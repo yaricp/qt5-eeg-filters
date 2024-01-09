@@ -1,0 +1,20 @@
+version: "3.3"
+services:
+
+  main:
+    image: "${DOCKER_IMAGE?Variable not set}:${TAG-latest}"
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - ./:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    command:
+      - poetry run python /app/src/main.py
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+
+volumes:
+  app-db-data:

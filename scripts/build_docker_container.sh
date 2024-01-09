@@ -1,3 +1,3 @@
 #/bin/bash
 
-docker build -f ../docker/Dockerfile -t qt5-eeg-filter:latest ../
+docker build -f ../docker/Dockerfile -t qt5-eeg-filters:latest ../
