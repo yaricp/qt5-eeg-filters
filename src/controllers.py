@@ -111,6 +111,7 @@ class Controller:
             if flag_new:
                 # create new plots for curves
                 self.view.create_graph(time_stamp)
+                self.view.add_checkbox(self.counter_proc, time_stamp)
 
         if flag_new:
             self.view.add_ranges_extremums()
@@ -224,6 +225,13 @@ class Controller:
         """
         model = self.model.dict_extremums_data
         model[args[0]][args[1]][args[2]] = (time, value)
+
+    # def curve_checked(self, b):
+    #     if b.text() == "ckbx1":
+    #      if b.isChecked() == True:
+    #         b.setText()+" is selected"
+    #      else:
+    #         b.setText()+" is deselected"
 
     def start_ep_passband_search(self) -> None:
         """

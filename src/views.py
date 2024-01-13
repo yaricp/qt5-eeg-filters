@@ -1,4 +1,5 @@
 import numpy as np
+from functools import partial
 # from loguru import logger
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
@@ -7,10 +8,13 @@ from PyQt5.QtWidgets import (
     QMainWindow,
     QApplication,
     QAction,
-    QFileDialog
+    QFileDialog,
+    QLineEdit,
+    QCheckBox
 )
 
 import ui
+
 
 pg.setConfigOptions(antialias=True)
 pen2 = pg.mkPen(color=(255, 0, 0), width=15, style=QtCore.Qt.DashLine)
@@ -41,6 +45,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.edit_max_end_changed_event = self.lineEditMaxEnd.returnPressed
         self.edit_min_start_changed_event = self.lineEditMinStart.returnPressed
         self.edit_min_end_changed_event = self.lineEditMinEnd.returnPressed
+        self.count_checkboxes = 0
 
         self.progressBar.setMaximum(100)
         self.listBandwidths.addItems(
@@ -48,7 +53,8 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         )
         self.bandwidths_clicked_event = self.listBandwidths.itemClicked
         self.range_search_maxmums = pg.LinearRegionItem(
-            [self.max_start_search, self.max_end_search])
+            [self.max_start_search, self.max_end_search]
+        )
         self.range_search_maxmums.setBrush(
             QtGui.QBrush(QtGui.QColor(0, 0, 255, 50))
         )
@@ -206,9 +212,55 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
     def create_graph(self, time_stamp):
         """Create new plot for new curve."""
-        self.graph.plot(
-            name=time_stamp
+        plot = self.graph.plot(
+            name=time_stamp, clickable=True
         )
+        plot.sigClicked.connect(
+            self.plot_clicked
+        )
+
+    def plot_clicked(self) -> None:
+        """
+
+        """
+        print("Curve Clicked!!!")
+
+    def add_checkbox(self, number: int, datetime: str) -> None:
+        """
+        Adds checkbox for change curve.
+        """
+        check_box = QCheckBox(
+            "ckbx"+str(self.count_checkboxes),
+            self.centralwidget
+        )
+        check_box.setObjectName(
+            "ckbx"+str(self.count_checkboxes)
+        )
+        check_box_pos = (
+            self.main_left_margin,
+            (
+                self.main_top_margin
+                + self.top_buttons_height
+                + 5
+                + self.count_checkboxes * 12
+            )
+        )
+        check_box_size = (
+            self.left_checkboxes_width,
+            self.left_checkboxes_height
+        )
+        check_box.setGeometry(
+            *check_box_pos, *check_box_size
+        )
+        check_box.setText(datetime)
+        check_box.stateChanged.connect(
+            partial(
+                self.main_window.handler.curve_clicked,
+                check_box
+            )
+        )
+        check_box.show()
+        self.count_checkboxes += 1
 
     def get_ranges_extremums(self):
         """Get values of bounds of regions for search extremums."""

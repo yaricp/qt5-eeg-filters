@@ -12,42 +12,198 @@ class Handler:
 
     def reshow_elements_after_resize_main_window(self) -> None:
         # logger.debug("Start resize windows %s" % self.view.width())
-        self.view.listBandwidths_pos = (
-            self.view.width() - self.view.listBandwidths_right_align,
-            self.view.listBandwidths_top_align
+        print("VIEW WIDTH:", self.view.width())
+        print("VIEW HEIGHT:", self.view.height())
+        progress_bar_pos = (
+            self.view.main_left_margin,
+            self.view.height() - (
+                self.view.progress_bar_height + self.view.main_bottom_margin
+            )
         )
-        self.view.listBandwidths.setGeometry(*self.view.listBandwidths_pos, *self.view.listBandwidths_size)
-        self.view.buttonAdd_pos = (
-            self.view.width() - self.view.buttonAdd_right_align,
-            self.view.buttonAdd_top_align
+        print("progress_bar_pos:", progress_bar_pos)
+        progress_bar_width = self.view.width() - (
+            self.view.main_right_margin + self.view.main_left_margin
         )
-        self.view.buttonAdd.setGeometry(*self.view.buttonAdd_pos, *self.view.buttonAdd_size)
-        self.view.newBandwidthField_pos = (
-            self.view.width() - self.view.newBandwidthField_right_align,
-            self.view.newBandwidthField_top_align
+        progress_bar_size = (
+            progress_bar_width, self.view.progress_bar_height
         )
-        self.view.newBandwidthField.setGeometry(*self.view.newBandwidthField_pos, *self.view.newBandwidthField_size)
+        print("progress_bar_size:", progress_bar_size)
+        self.view.progressBar.setGeometry(
+            *progress_bar_pos, *progress_bar_size
+        )
+        
+        button_add_passband_size = (
+            self.view.bandwidth_area_width, 
+            self.view.top_buttons_height
+        )
+        button_add_passband_pos = (
+            self.view.width() - (
+                self.view.main_right_margin + self.view.bandwidth_area_width
+            ),
+            progress_bar_pos[1] - 10 - self.view.top_buttons_height
+        )
+        # print("button_add_passband_pos:", button_add_passband_pos)
+        self.view.buttonAdd.setGeometry(
+            *button_add_passband_pos, *button_add_passband_size
+        )
+        
+        new_bandwidth_field_size = (
+            self.view.bandwidth_area_width, self.view.top_buttons_height
+        )
+        # print("new_bandwidth_field_size:", new_bandwidth_field_size)
+        new_bandwidth_field_pos = (
+            button_add_passband_pos[0],
+            button_add_passband_pos[1] - 5 - self.view.top_buttons_height
+        )
+        # print("new_bandwidth_field_pos:", new_bandwidth_field_pos)
+        self.view.newBandwidthField.setGeometry(
+            *new_bandwidth_field_pos, *new_bandwidth_field_size
+        )
+        
+        list_bandwidths_top_margin = (
+            self.view.main_top_margin + self.view.top_buttons_height + 5
+        )
+        # print("list_bandwidths_top_margin:", list_bandwidths_top_margin)
+        list_bandwidths_size = (
+            self.view.bandwidth_area_width,
+            new_bandwidth_field_pos[1] - 5 - list_bandwidths_top_margin
+        )
+        # print("list_bandwidths_size:", list_bandwidths_size)
+        list_bandwidths_pos = (
+            button_add_passband_pos[0],
+            list_bandwidths_top_margin
+        )
+        # print("list_bandwidths_pos: ", list_bandwidths_pos)
+        self.view.listBandwidths.setGeometry(
+            *list_bandwidths_pos, *list_bandwidths_size
+        )
+        slider1_size = (
+            self.view.slider1_size,
+            list_bandwidths_size[1] + 2 * self.view.top_buttons_height + 10
+        )
+        slider1_pos = (
+            list_bandwidths_pos[0] - 5 - slider1_size[0],
+            list_bandwidths_top_margin
+        )
+        self.view.slider1.setGeometry(
+            *slider1_pos, *slider1_size
+        )
+        
+        graph_size = (
+            slider1_pos[0]
+            - 5 
+            - self.view.left_checkboxes_width
+            - 5
+            - self.view.main_left_margin,
+            slider1_size[1]
+        )
+        graph_pos = (
+            self.view.main_left_margin + self.view.left_checkboxes_width + 5,
+            self.view.main_top_margin + self.view.top_buttons_height + 5
+        )
+        self.view.graph.setGeometry(
+            *graph_pos, *graph_size
+        )
 
-        self.view.graph_size = (
-            self.view.width() - self.view.graph_right_align,
-            self.view.height() - self.view.graph_bottom_align,
+        button_open_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
         )
-        self.view.graph.setGeometry(*self.view.graph_pos, *self.view.graph_size)
-        self.view.slider1_pos = (
-            self.view.width() - self.view.slider1_right_align,
-            self.view.slider1_top_align
+        button_open_pos = (
+            self.view.main_left_margin + self.view.left_checkboxes_width + 5,
+            self.view.main_top_margin
         )
-        self.view.slider1_size = self.view.slider1_size[0], self.view.height() - self.view.graph_bottom_align
-        self.view.slider1.setGeometry(*self.view.slider1_pos, *self.view.slider1_size)
-        self.view.progressBar_pos = (
-            self.view.progressBar_left,
-            self.view.height() - self.view.progressBar_poz_bottom_align
+        self.view.buttonOpen.setGeometry(
+            *button_open_pos, *button_open_size
         )
-        self.view.progressBar_size = (
-            self.view.graph.width(),
-            self.view.progressBar_left
+
+        button_save_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
         )
-        self.view.progressBar.setGeometry(*self.view.progressBar_pos, *self.view.progressBar_size)
+        button_save_pos = (
+            button_open_pos[0] + 5 + self.view.top_buttons_width,
+            self.view.main_top_margin
+        )
+        self.view.buttonSave.setGeometry(
+            *button_save_pos, *button_save_size
+        )
+
+        button_visible_region_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
+        )
+        button_visible_region_pos = (
+            (self.view.width() / 2) - (self.view.top_buttons_width / 2),
+            self.view.main_top_margin
+        )
+        self.view.buttonVisibleRegion.setGeometry(
+            *button_visible_region_pos,
+            *button_visible_region_size
+        )
+
+        line_edit_max_start_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
+        )
+        line_edit_max_start_pos = (
+            button_visible_region_pos[0] - (
+                2 * self.view.top_buttons_width
+            ) - 10,
+            self.view.main_top_margin
+        )
+        self.view.lineEditMaxStart.setGeometry(
+            *line_edit_max_start_pos,
+            *line_edit_max_start_size
+        )
+
+        line_edit_max_end_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
+        )
+        line_edit_max_end_pos = (
+            button_visible_region_pos[0] - (
+                self.view.top_buttons_width + 5
+            ),
+            self.view.main_top_margin
+        )
+        self.view.lineEditMaxEnd.setGeometry(
+            *line_edit_max_end_pos,
+            *line_edit_max_end_size
+        )
+
+        line_edit_min_start_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
+        )
+        line_edit_min_start_pos = (
+            button_visible_region_pos[0] + self.view.top_buttons_width + 5,
+            self.view.main_top_margin
+        )
+        self.view.lineEditMinStart.setGeometry(
+            *line_edit_min_start_pos,
+            *line_edit_min_start_size
+        )
+
+        line_edit_min_end_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
+        )
+        line_edit_min_end_pos = (
+            button_visible_region_pos[0] + (2 * self.view.top_buttons_width) + 10,
+            self.view.main_top_margin
+        )
+        self.view.lineEditMinEnd.setGeometry(
+            *line_edit_min_end_pos,
+            *line_edit_min_end_size
+        )
+
+        button_start_search_pos = (
+            self.view.width() - (
+                self.view.main_left_margin + self.view.top_buttons_width
+            ),
+            self.view.main_top_margin
+        )
+        button_start_search_size = (
+            self.view.top_buttons_width, self.view.top_buttons_height
+        )
+        self.view.buttonStartSearch.setGeometry(
+            *button_start_search_pos,
+            *button_start_search_size
+        )
 
     def bandwidths_activated(self, item) -> None:
         """
@@ -199,6 +355,19 @@ class Handler:
         self.config.bandwidths.append(value)
         self.view.lineEdit_3.clear()
 
+    def curve_clicked(self, b) -> None:
+        """
+        Changes dict of changed curves.
+        """
+        key = b.text()
+        curve = self.model.dict_bandwidth_data["source"][key]
+        print(f"key: {key}, len curve: {len(curve)}")
+        if b.isChecked() == True:
+            self.model.changed_curves[key] = curve
+        else:
+            del self.model.changed_curves[key]
+        print("changed_curves: ", len(self.model.changed_curves))
+    
     def start_ep_passband_search(self) -> None:
         """
         Calls controller method.

@@ -21,9 +21,15 @@ class MainWindow:
         self.model = ModelData()
         self.view = ViewGraph(self.config, main=self)
         self.controller = Controller(self.config, self.model, self.view)
-        self.handler = Handler(self.config, self.model, self.view, self.controller)
-        self.view.resized.connect(self.handler.reshow_elements_after_resize_main_window)
-        self.view.bandwidths_clicked_event.connect(self.handler.bandwidths_activated)
+        self.handler = Handler(
+            self.config, self.model, self.view, self.controller
+        )
+        self.view.resized.connect(
+            self.handler.reshow_elements_after_resize_main_window
+        )
+        self.view.bandwidths_clicked_event.connect(
+            self.handler.bandwidths_activated
+        )
         self.view.maximums_region_changed_event.connect(
             self.handler.change_range_search_extremums
         )

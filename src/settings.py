@@ -7,10 +7,10 @@ MAX_ITER_VALUE = 0.005
 MAX_STEP_ITER = 50
 FILTER_ORDER = 3          # order for filter
 RIPPLE = 3                # for Chebyshev filter
-MAX_START_SEARCH = 0.08
-MAX_END_SEARCH = 0.1
-MIN_START_SEARCH = 0.18
-MIN_END_SEARCH = 0.2
+MAX_START_SEARCH = 0.01
+MAX_END_SEARCH = 0.02
+MIN_START_SEARCH = 0.04
+MIN_END_SEARCH = 0.06
 BANDWIDTHS = [
                 'source',
                 [1, 100],

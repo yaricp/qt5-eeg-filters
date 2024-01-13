@@ -32,6 +32,8 @@ class ModelData:
     list_data = []
     tick_times = 0
 
+    changed_curves = {}
+
     def clear_extremums(self) -> None:
         """ Clear dict of extremums."""
 
