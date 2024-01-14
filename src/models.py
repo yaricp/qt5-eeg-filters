@@ -32,7 +32,10 @@ class ModelData:
     list_data = []
     tick_times = 0
 
+    # for ep_passband_filter_selector
     changed_curves = {}
+    selector_filter_borders = {}
+    # selector_range_search_extremums = {}
 
     def clear_extremums(self) -> None:
         """ Clear dict of extremums."""

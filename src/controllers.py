@@ -226,25 +226,31 @@ class Controller:
         model = self.model.dict_extremums_data
         model[args[0]][args[1]][args[2]] = (time, value)
 
-    # def curve_checked(self, b):
-    #     if b.text() == "ckbx1":
-    #      if b.isChecked() == True:
-    #         b.setText()+" is selected"
-    #      else:
-    #         b.setText()+" is deselected"
-
     def start_ep_passband_search(self) -> None:
         """
         Starts EP bassband search
         """
+        # self.model.selector_filter_borders
         pbs = PassbandSearcher(
-            curves=[],
-            filter_borders={},
-            tick_times=[],
-            where_search_extremums=[],
+            curves=self.model.changed_curves,
+            filter_borders={
+                "low": [5, 20, 5],
+                "high": [100, 200, 10]
+            },
+            tick_times=self.model.tick_times,
+            where_search_extremums={
+                "max": self.view.range_search_maxmums.getRegion(),
+                "min": self.view.range_search_minimums.getRegion()
+            },
             check_average=True,
             check_square=False,
-            config_filter={}
+            config_filter={
+                "fs": self.config.fs,
+                "filter_order": self.config.filter_order,
+                "ripple": self.config.ripple
+            }
         )
-        result = pbs.start()
         print("Start!!!")
+        result = pbs.start()
+        print("Result:", result)
+        

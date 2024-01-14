@@ -8,10 +8,10 @@ class PassbandSearcher:
 
     def __init__(
         self,
-        curves: list,
+        curves: dict,
         filter_borders: dict,
         tick_times: list,
-        where_search_extremums: list,
+        where_search_extremums: dict,
         check_average: bool,
         check_square: bool,
         config_filter: dict
@@ -65,13 +65,13 @@ class PassbandSearcher:
             curve_max = search_max_min(
                 self.tick_times,
                 curve,
-                self.where_search_extremums,
+                self.where_search_extremums["max"],
                 "max"
             )
             curve_min = search_max_min(
                 self.tick_times,
                 curve,
-                self.where_search_extremums,
+                self.where_search_extremums["min"],
                 "min"
             )
             deltas.append(curve_max - curve_min)
@@ -83,18 +83,18 @@ class PassbandSearcher:
         """
         return np.trapz(np.absolute(np.subtract(curve1, curve2)))
 
-    def filter_curves(self, lb: int, hb: int):
+    def filter_curves(self, lb: int, hb: int) -> list:
         """
         Filters curves
         """
         filtered_curves = []
-        for curve in self.curves:
+        for key, curve in self.curves.items():
             filtered_curve = make_filter(
-                curve,
+                curve[key],
                 (lb, hb),
-                self.config.fs,
-                self.config.filter_order,
-                self.config.ripple
+                self.config["fs"],
+                self.config["filter_order"],
+                self.config["ripple"]
             )
             filtered_curves.append(filtered_curve)
         return filtered_curves
