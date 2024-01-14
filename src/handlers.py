@@ -127,25 +127,11 @@ class Handler:
             *button_save_pos, *button_save_size
         )
 
-        button_visible_region_size = (
-            self.view.top_buttons_width, self.view.top_buttons_height
-        )
-        button_visible_region_pos = (
-            (self.view.width() / 2) - (self.view.top_buttons_width / 2),
-            self.view.main_top_margin
-        )
-        self.view.buttonVisibleRegion.setGeometry(
-            *button_visible_region_pos,
-            *button_visible_region_size
-        )
-
         line_edit_max_start_size = (
-            self.view.top_buttons_width, self.view.top_buttons_height
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
         )
         line_edit_max_start_pos = (
-            button_visible_region_pos[0] - (
-                2 * self.view.top_buttons_width
-            ) - 10,
+            button_save_pos[0] + button_save_size[0] + 30,
             self.view.main_top_margin
         )
         self.view.lineEditMaxStart.setGeometry(
@@ -154,12 +140,10 @@ class Handler:
         )
 
         line_edit_max_end_size = (
-            self.view.top_buttons_width, self.view.top_buttons_height
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
         )
         line_edit_max_end_pos = (
-            button_visible_region_pos[0] - (
-                self.view.top_buttons_width + 5
-            ),
+            line_edit_max_start_pos[0] + line_edit_max_start_size[0] + 5,
             self.view.main_top_margin
         )
         self.view.lineEditMaxEnd.setGeometry(
@@ -167,11 +151,23 @@ class Handler:
             *line_edit_max_end_size
         )
 
-        line_edit_min_start_size = (
+        button_visible_region_size = (
             self.view.top_buttons_width, self.view.top_buttons_height
         )
+        button_visible_region_pos = (
+            line_edit_max_end_pos[0] + line_edit_max_end_size[0] + 5,
+            self.view.main_top_margin
+        )
+        self.view.buttonVisibleRegion.setGeometry(
+            *button_visible_region_pos,
+            *button_visible_region_size
+        )
+
+        line_edit_min_start_size = (
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
+        )
         line_edit_min_start_pos = (
-            button_visible_region_pos[0] + self.view.top_buttons_width + 5,
+            button_visible_region_pos[0] + button_visible_region_size[0] + 5,
             self.view.main_top_margin
         )
         self.view.lineEditMinStart.setGeometry(
@@ -180,10 +176,10 @@ class Handler:
         )
 
         line_edit_min_end_size = (
-            self.view.top_buttons_width, self.view.top_buttons_height
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
         )
         line_edit_min_end_pos = (
-            button_visible_region_pos[0] + (2 * self.view.top_buttons_width) + 10,
+            line_edit_min_start_pos[0] + line_edit_min_start_size[0] + 5,
             self.view.main_top_margin
         )
         self.view.lineEditMinEnd.setGeometry(
@@ -203,6 +199,78 @@ class Handler:
         self.view.buttonStartSearch.setGeometry(
             *button_start_search_pos,
             *button_start_search_size
+        )
+
+        line_edit_lfs_size = (
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
+        )
+        line_edit_lfs_pos = (
+            button_start_search_pos[0] - line_edit_lfs_size[0] - 30,
+            self.view.main_top_margin
+        )
+        self.view.lineEditHFS.setGeometry(
+            *line_edit_lfs_pos,
+            *line_edit_lfs_size
+        )
+
+        line_edit_lfrl_size = (
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
+        )
+        line_edit_lfrl_pos = (
+            line_edit_lfs_pos[0] - line_edit_lfrl_size[0] - 5,
+            self.view.main_top_margin
+        )
+        self.view.lineEditHFRH.setGeometry(
+            *line_edit_lfrl_pos,
+            *line_edit_lfrl_size
+        )
+
+        line_edit_lfrh_size = (
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
+        )
+        line_edit_lfrh_pos = (
+            line_edit_lfrl_pos[0] - line_edit_lfrh_size[0] - 5,
+            self.view.main_top_margin
+        )
+        self.view.lineEditHFRL.setGeometry(
+            *line_edit_lfrh_pos,
+            *line_edit_lfrh_size
+        )
+
+        line_edit_hfs_size = (
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
+        )
+        line_edit_hfs_pos = (
+            line_edit_lfrh_pos[0] - line_edit_hfs_size[0] - 30,
+            self.view.main_top_margin
+        )
+        self.view.lineEditLFS.setGeometry(
+            *line_edit_hfs_pos,
+            *line_edit_hfs_size
+        )
+
+        line_edit_hfrl_size = (
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
+        )
+        line_edit_hfrl_pos = (
+            line_edit_hfs_pos[0] - line_edit_hfrl_size[0] - 5,
+            self.view.main_top_margin
+        )
+        self.view.lineEditLFRH.setGeometry(
+            *line_edit_hfrl_pos,
+            *line_edit_hfrl_size
+        )
+
+        line_edit_hfrh_size = (
+            self.view.top_buttons_width / 2, self.view.top_buttons_height
+        )
+        line_edit_hfrh_pos = (
+            line_edit_hfrl_pos[0] - line_edit_hfrh_size[0] - 5,
+            self.view.main_top_margin
+        )
+        self.view.lineEditLFRL.setGeometry(
+            *line_edit_hfrh_pos,
+            *line_edit_hfrh_size
         )
 
     def bandwidths_activated(self, item) -> None:

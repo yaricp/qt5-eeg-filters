@@ -86,9 +86,25 @@ class Ui_MainWindow(object):
         self.buttonVisibleRegion.setObjectName("buttonVisibleRegion")
 
         self.buttonStartSearch = QtWidgets.QPushButton(self.centralwidget)
-        
         self.buttonStartSearch.setObjectName("buttonStartSearch")
 
+        self.lineEditHFRH = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditHFRH.setObjectName("lineEditHFRH")
+
+        self.lineEditHFRL = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditHFRL.setObjectName("lineEditHFRL")
+
+        self.lineEditHFS = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditHFS.setObjectName("lineEditHFS")
+
+        self.lineEditLFRH = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditLFRH.setObjectName("lineEditLFRH")
+
+        self.lineEditLFRL = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditLFRL.setObjectName("lineEditLFRL")
+
+        self.lineEditLFS = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditLFS.setObjectName("lineEditLFS")
         
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)

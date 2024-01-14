@@ -232,23 +232,24 @@ class Controller:
         """
         # self.model.selector_filter_borders
         pbs = PassbandSearcher(
-            curves=self.model.changed_curves,
-            filter_borders={
-                "low": [5, 20, 5],
-                "high": [100, 200, 10]
-            },
+            curves=self.model.changed_curves.values(),
             tick_times=self.model.tick_times,
-            where_search_extremums={
-                "max": self.view.range_search_maxmums.getRegion(),
-                "min": self.view.range_search_minimums.getRegion()
-            },
-            check_average=True,
-            check_square=False,
-            config_filter={
-                "fs": self.config.fs,
-                "filter_order": self.config.filter_order,
-                "ripple": self.config.ripple
-            }
+            fsr=self.config.fs,
+            max_search_range=self.view.range_search_maxmums.getRegion(),
+            min_search_range=self.view.range_search_minimums.getRegion(),
+            filter_high_limit_range=(
+                self.view.lineEditHFRL.text(),
+                self.view.lineEditHFRH.text()
+            ),
+            step_high_filter=self.view.lineEditHFS.text(),
+            filter_low_limit_range=(
+                self.view.lineEditLFRL.text(),
+                self.view.lineEditLFRH.text()
+            ),
+            step_low_filter=self.view.lineEditLFS.text(),
+            type_mean="average",
+            cheb_filter_order=self.config.filter_order,
+            cheb_ripple=self.config.ripple
         )
         print("Start!!!")
         result = pbs.start()
