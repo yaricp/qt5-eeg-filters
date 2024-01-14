@@ -88,7 +88,7 @@ class PassbandSearcher:
         integrals = []
         for curve1, curve2 in combinations(filtered_curves, 2):
             integral = self.get_integral(curve1, curve2)
-            print("integral:", integral)
+            # print("integral:", integral)
             integrals.append(integral)
 
         if self.type_mean == "average":
@@ -115,8 +115,6 @@ class PassbandSearcher:
                 self.min_search_range,
                 "min"
             )
-            print("max: ", curve_max)
-            print("min: ", curve_min)
             deltas.append(curve_max[1] - curve_min[1])
         return sum(deltas) / len(deltas)
 
@@ -152,12 +150,12 @@ class PassbandSearcher:
         print(self.step_high_filter)
         for lb in range(
             self.filter_low_limit_range[0],
-            self.filter_low_limit_range[1],
+            self.filter_low_limit_range[1] + self.step_low_filter,
             self.step_low_filter
         ):
             for hb in range(
                 self.filter_high_limit_range[0],
-                self.filter_high_limit_range[1],
+                self.filter_high_limit_range[1] + self.step_high_filter,
                 self.step_high_filter
             ):
                 print("lb, hb:",lb, hb)
