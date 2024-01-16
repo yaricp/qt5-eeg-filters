@@ -20,6 +20,15 @@ class Config:
     target_dirpath = ''
     fs = None
 
+    # for ep_passband_filter_selector
+
+    lfrl = LFRL
+    lfrh = LFRH
+    lfs = LFS
+    hfrl = HFRL
+    hfrh = HFRH
+    hfs = HFS
+
 
 class ModelData:
     """ Class implement data of curves, bandwidth of filter and points. """

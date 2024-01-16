@@ -201,6 +201,13 @@ class Handler:
             *button_start_search_size
         )
 
+        # self.view.spinner.setGeometry(
+        #     button_start_search_pos[0] - 5,
+        #     self.view.main_top_margin,
+        #     self.view.top_buttons_height, 
+        #     self.view.top_buttons_height
+        # )
+
         line_edit_lfs_size = (
             self.view.top_buttons_width / 2, self.view.top_buttons_height
         )
@@ -440,5 +447,20 @@ class Handler:
         """
         Calls controller method.
         """
-        self.controller.start_ep_passband_search()
-        self.view.lineEditMaxStart.setText("Oppa!start search!")
+        self.view.spinner.show()
+        self.view.spinner.start()
+        result = self.controller.start_ep_passband_search()
+        print("result: ", result)
+        index_item = 0
+        for item in self.view.bandwidths:
+            print("item: ", item)
+            if list(result) == item:
+                print("index_item: ", index_item)
+                self.view.listBandwidths.item(index_item).setBackground(
+                    self.view.selected_item
+                )
+                break
+            index_item += 1
+        self.view.spinner.stop()
+        # self.view.spinner.hide()
+        self.view.selector_windows.show()

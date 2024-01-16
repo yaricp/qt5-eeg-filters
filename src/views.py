@@ -5,6 +5,9 @@ import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
+    QWidget,
+    QLabel,
+    QVBoxLayout,
     QMainWindow,
     QApplication,
     QAction,
@@ -14,6 +17,7 @@ from PyQt5.QtWidgets import (
 )
 
 import ui
+from qt5_waiting_spinner import QtWaitingSpinner
 
 
 pg.setConfigOptions(antialias=True)
@@ -27,6 +31,8 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
         super().__init__()
         self.setupUi(self)
+
+        self.selector_windows = SelectorWindow()
 
         self.main_window = main
         self.iter_value = config.iter_value
@@ -51,6 +57,11 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.listBandwidths.addItems(
             ['%s' % b for b in self.bandwidths]
         )
+        print("spenner new declared")
+        self.spinner = QtWaitingSpinner(
+            self.centralwidget, True, True
+        )
+        # , QtCore.Qt.ApplicationModal
         self.bandwidths_clicked_event = self.listBandwidths.itemClicked
         self.range_search_maxmums = pg.LinearRegionItem(
             [self.max_start_search, self.max_end_search]
@@ -88,6 +99,8 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.file_dialog_save = QFileDialog()
         self.file_dialog_save.setFileMode(4)
 
+        self.selected_item = QtGui.QBrush(QtGui.QColor(0, 0, 255, 50))
+
         self.open_clicked_event = self.buttonOpen.clicked
         self.add_clicked_event = self.buttonAdd.clicked
         self.save_clicked_event = self.buttonSave.clicked
@@ -104,6 +117,13 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         file_menu.addAction(open_file_button)
         file_menu.addAction(save_file_button)
         file_menu.addAction(close_file_button)
+
+        self.lineEditHFRH.setText(str(config.hfrh))
+        self.lineEditHFRL.setText(str(config.hfrl))
+        self.lineEditHFS.setText(str(config.hfs))
+        self.lineEditLFRL.setText(str(config.lfrl))
+        self.lineEditLFRH.setText(str(config.lfrh))
+        self.lineEditLFS.setText(str(config.lfs))
 
     def resizeEvent(self, event):
         self.resized.emit()
@@ -312,3 +332,16 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             self,
             'Save filtered data',
             './')
+
+
+class SelectorWindow(QWidget):
+    """
+    This "window" is a QWidget. If it has no parent, it
+    will appear as a free-floating window as we want.
+    """
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.label = QLabel("Another Window")
+        layout.addWidget(self.label)
+        self.setLayout(layout)

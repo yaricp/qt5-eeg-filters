@@ -81,7 +81,6 @@ class Ui_MainWindow(object):
         self.lineEditMinEnd = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEditMinEnd.setObjectName("lineEditMinEnd")
 
-
         self.buttonVisibleRegion = QtWidgets.QPushButton(self.centralwidget)
         self.buttonVisibleRegion.setObjectName("buttonVisibleRegion")
 
