@@ -3,6 +3,7 @@ from functools import partial
 # from loguru import logger
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import Slot, Signal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QWidget,
@@ -32,9 +33,8 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.selector_windows = SelectorWindow()
-
         self.main_window = main
+        self.selector_window = None
         self.iter_value = config.iter_value
         self.max_start_search = config.max_start_search
         self.max_end_search = config.max_end_search
@@ -53,15 +53,18 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.edit_min_end_changed_event = self.lineEditMinEnd.returnPressed
         self.count_checkboxes = 0
 
+        self.spinner = QtWaitingSpinner(self, False, False)
+        self.spinner.setLineLength(2 / 6 * self.top_buttons_height)
+        self.spinner.setInnerRadius(1 / 6 * self.top_buttons_height)
+        self.spinner.start()
+        self.spinner.hide()
+
+
         self.progressBar.setMaximum(100)
         self.listBandwidths.addItems(
             ['%s' % b for b in self.bandwidths]
         )
-        print("spenner new declared")
-        self.spinner = QtWaitingSpinner(
-            self.centralwidget, True, True
-        )
-        # , QtCore.Qt.ApplicationModal
+        
         self.bandwidths_clicked_event = self.listBandwidths.itemClicked
         self.range_search_maxmums = pg.LinearRegionItem(
             [self.max_start_search, self.max_end_search]
@@ -125,9 +128,29 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.lineEditLFRH.setText(str(config.lfrh))
         self.lineEditLFS.setText(str(config.lfs))
 
+    def closeEvent(self, event):
+        for window in QApplication.topLevelWidgets():
+            window.close()
+
     def resizeEvent(self, event):
         self.resized.emit()
         return super(ViewGraph, self).resizeEvent(event)
+
+    def create_selector_window(self):
+        """
+        Creates a new window for results of EP Bandpass filter selector.
+        """
+
+        self.selector_window = SelectorWindow(self)
+        self.selector_window.closed.connect(
+            self.on_selector_window_destroy
+        )
+
+    def on_selector_window_destroy(self):
+        """
+        Sets Enabled to True when selector windows closed.
+        """
+        self.setEnabled(True)
 
     def show_graphic_filtered(
             self,
@@ -280,6 +303,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             )
         )
         check_box.show()
+        self.main_window.model.check_box_list.append(check_box)
         self.count_checkboxes += 1
 
     def get_ranges_extremums(self):
@@ -333,15 +357,101 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             'Save filtered data',
             './')
 
+    @Slot()
+    def get_selector_result(self):
+        """
+        Gets result and show new window with graph.
+        """
+        bandpass = self.main_window.model.ep_found_bandpass
+        heatmap = self.main_window.model.ep_heatmap
+        print("bandpass: ", bandpass)
+        index_item = 0
+        for item in self.bandwidths:
+            print("item: ", item)
+            if list(bandpass) == item:
+                print("index_item: ", index_item)
+                self.listBandwidths.item(index_item).setBackground(
+                    self.selected_item
+                )
+                break
+            index_item += 1
+        self.spinner.hide()
+        self.create_selector_window()
+        self.selector_window.draw_heatmap(heatmap)
+        self.selector_window.show()
+
 
 class SelectorWindow(QWidget):
     """
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
     """
-    def __init__(self):
+    closed = Signal()
+
+    def __init__(self, parent):
         super().__init__()
-        layout = QVBoxLayout()
-        self.label = QLabel("Another Window")
-        layout.addWidget(self.label)
-        self.setLayout(layout)
+        _translate = QtCore.QCoreApplication.translate
+        self.setObjectName("SelectorWindow")
+        self.parent = parent
+        start_size = 400, 400
+        self.resize(*start_size)
+        start_poz = (
+            self.parent.x() + self.parent.width()/2 - self.width()/2,
+            self.parent.y() + self.parent.height()/2 - self.height()/2
+        )
+        self.setGeometry(*start_poz, *start_size)
+        self.setWindowTitle(_translate(
+            "SelectorWindow", "EP Bandpass Filter Selector"
+        ))
+        self.destroyed.connect(self.parent.on_selector_window_destroy)
+
+        self.layout = QVBoxLayout()
+        self.label = QLabel("Selector Window")
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
+        
+        # self.selector_graph = pg.PlotWidget(self)
+        # self.selector_graph.setBackground('w')
+
+    @Slot()
+    def closeEvent(self, event):
+        self.closed.emit()
+        super().closeEvent(event)
+
+    def draw_heatmap(self, heatmap_data):
+        """
+        Draws heatmap of ep selector
+        """
+        prev_data = []
+        image_data = []
+        low_borders = []
+        min_value = 0
+        max_value = 0
+        high_borders = heatmap_data[0][1:]
+        for row in heatmap_data[1:]:
+            low_borders.append(row[0])
+            min_value = min(min_value, min(row[1:]))
+            max_value = max(max_value, max(row[1:]))
+            prev_data.append(row[1:])
+
+        delta = max_value - min_value
+        print("prev_data:", prev_data)
+        for row in prev_data:
+            image_row = []
+            for value in row:
+                image_row.append(
+                    (delta - (value - min_value)) / delta
+                )
+            image_data.append(np.asarray(image_row))
+
+        graphWidget = pg.ImageView()
+    
+        graphWidget.setImage(np.asarray(image_data))
+        colors = [
+            (0, 0, 0),(4, 5, 61),(84, 42, 55),(15, 87, 60),
+            (208, 17, 141),(255, 255, 255)
+        ]
+        cmap = pg.ColorMap(pos=np.linspace(0.0, 1.0, 6), color=colors)
+        graphWidget.setColorMap(cmap)
+    
+        self.layout.addWidget(graphWidget)

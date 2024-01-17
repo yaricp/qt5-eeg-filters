@@ -148,23 +148,36 @@ class PassbandSearcher:
         print(self.step_low_filter)
         print(self.filter_high_limit_range)
         print(self.step_high_filter)
+
+        heatmap_data = []
+        head_row = []
+        head_row_created = False
         for lb in range(
             self.filter_low_limit_range[0],
             self.filter_low_limit_range[1] + self.step_low_filter,
             self.step_low_filter
         ):
+            data_row = []
             for hb in range(
                 self.filter_high_limit_range[0],
                 self.filter_high_limit_range[1] + self.step_high_filter,
                 self.step_high_filter
             ):
-                print("lb, hb:",lb, hb)
+                # print("lb, hb:",lb, hb)
+                if not head_row_created:
+                    head_row.append(hb)
                 filtered_curves = self.filter_curves(lb, hb)
                 reproduct =  self.get_reproduct(filtered_curves)
                 delta_extrmums = self.get_delta_extremum(filtered_curves)
                 optimum = reproduct / delta_extrmums
-                self.optimum_matrix[lb] = { hb: optimum }
+                data_row.append(optimum)
                 self.optimums.append(optimum)
                 self.filter_by_optimum[optimum] = (lb, hb)
+            if not head_row_created:
+                heatmap_data.append(["-"] + head_row)
+                head_row_created = True
+            heatmap_data.append([lb] + data_row)
         result_optimum = min(self.optimums)
-        return self.filter_by_optimum[result_optimum]
+        return (
+            self.filter_by_optimum[result_optimum], heatmap_data
+        )

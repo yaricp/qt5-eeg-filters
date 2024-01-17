@@ -40,11 +40,13 @@ class ModelData:
     list_times = []
     list_data = []
     tick_times = 0
+    check_box_list = []
 
     # for ep_passband_filter_selector
     changed_curves = {}
-    selector_filter_borders = {}
-    # selector_range_search_extremums = {}
+    ep_found_bandpass = []
+    ep_heatmap = {}
+
 
     def clear_extremums(self) -> None:
         """ Clear dict of extremums."""

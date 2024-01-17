@@ -50,13 +50,25 @@ class MainWindow:
         )
         self.view.menu_open_file_event.connect(self.handler.show_dialog_open)
         self.view.open_clicked_event.connect(self.handler.show_dialog_open)
-        self.view.menu_save_file_event.connect(self.handler.save_button_pressed)
+        self.view.menu_save_file_event.connect(
+            self.handler.save_button_pressed
+        )
         self.view.save_clicked_event.connect(self.handler.save_button_pressed)
-        self.view.menu_close_file_event.connect(self.handler.close_button_pressed)
+        self.view.menu_close_file_event.connect(
+            self.handler.close_button_pressed
+        )
         self.view.add_clicked_event.connect(self.handler.add_new_bandwidth)
         self.view.value_changed_event.connect(self.handler.change_value_slider)
-        self.view.toggle_visible_regions_event.connect(self.handler.hide_show_regions)
-        self.view.start_ep_passband_search_event.connect(self.handler.start_ep_passband_search)
+        self.view.toggle_visible_regions_event.connect(
+            self.handler.hide_show_regions
+        )
+
+        self.view.check_box_all.stateChanged.connect(
+            self.handler.select_deselect_all
+        )
+        self.view.start_ep_passband_search_event.connect(
+            self.handler.start_ep_passband_search
+        )
 
 
 if __name__ == '__main__':

@@ -58,6 +58,11 @@ class Ui_MainWindow(object):
         self.graph = pg.PlotWidget(self.centralwidget)
         self.graph.setBackground('w')
 
+        self.check_box_all = QtWidgets.QCheckBox("ckbxall", self.centralwidget)
+        self.check_box_all.setObjectName("ckbxall")
+        
+        self.check_box_all.setText("all")
+        
         self.buttonOpen = QtWidgets.QPushButton(
             self.centralwidget
         )

@@ -1,5 +1,27 @@
+import time
+
 # from loguru import logger
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import (
+    Qt, QThreadPool, QMetaObject, QRunnable
+)
+
+
+class RequestRunnable(QRunnable):
+    def __init__(self, handler):
+        QRunnable.__init__(self)
+        self.handler = handler
+
+    def run(self):
+        """
+        Starts new threads for selector.
+        """
+        bandpass, heatmap = self.handler.controller.start_ep_passband_search()
+        self.handler.model.ep_found_bandpass = bandpass
+        self.handler.model.ep_heatmap = heatmap
+        QMetaObject.invokeMethod(
+            self.handler.view, "get_selector_result", Qt.QueuedConnection
+        )
 
 
 class Handler:
@@ -20,14 +42,12 @@ class Handler:
                 self.view.progress_bar_height + self.view.main_bottom_margin
             )
         )
-        print("progress_bar_pos:", progress_bar_pos)
         progress_bar_width = self.view.width() - (
             self.view.main_right_margin + self.view.main_left_margin
         )
         progress_bar_size = (
             progress_bar_width, self.view.progress_bar_height
         )
-        print("progress_bar_size:", progress_bar_size)
         self.view.progressBar.setGeometry(
             *progress_bar_pos, *progress_bar_size
         )
@@ -42,7 +62,6 @@ class Handler:
             ),
             progress_bar_pos[1] - 10 - self.view.top_buttons_height
         )
-        # print("button_add_passband_pos:", button_add_passband_pos)
         self.view.buttonAdd.setGeometry(
             *button_add_passband_pos, *button_add_passband_size
         )
@@ -50,12 +69,10 @@ class Handler:
         new_bandwidth_field_size = (
             self.view.bandwidth_area_width, self.view.top_buttons_height
         )
-        # print("new_bandwidth_field_size:", new_bandwidth_field_size)
         new_bandwidth_field_pos = (
             button_add_passband_pos[0],
             button_add_passband_pos[1] - 5 - self.view.top_buttons_height
         )
-        # print("new_bandwidth_field_pos:", new_bandwidth_field_pos)
         self.view.newBandwidthField.setGeometry(
             *new_bandwidth_field_pos, *new_bandwidth_field_size
         )
@@ -63,17 +80,14 @@ class Handler:
         list_bandwidths_top_margin = (
             self.view.main_top_margin + self.view.top_buttons_height + 5
         )
-        # print("list_bandwidths_top_margin:", list_bandwidths_top_margin)
         list_bandwidths_size = (
             self.view.bandwidth_area_width,
             new_bandwidth_field_pos[1] - 5 - list_bandwidths_top_margin
         )
-        # print("list_bandwidths_size:", list_bandwidths_size)
         list_bandwidths_pos = (
             button_add_passband_pos[0],
             list_bandwidths_top_margin
         )
-        # print("list_bandwidths_pos: ", list_bandwidths_pos)
         self.view.listBandwidths.setGeometry(
             *list_bandwidths_pos, *list_bandwidths_size
         )
@@ -114,6 +128,23 @@ class Handler:
         )
         self.view.buttonOpen.setGeometry(
             *button_open_pos, *button_open_size
+        )
+
+        check_box_all_size = (
+            self.view.left_checkboxes_width,
+            self.view.left_checkboxes_height
+        )
+        check_box_all_pos = (
+            self.view.main_left_margin,
+            (
+                self.view.main_top_margin 
+                + self.view.top_buttons_height / 2
+                - self.view.left_checkboxes_height/2
+            )
+        )
+        
+        self.view.check_box_all.setGeometry(
+            *check_box_all_pos, *check_box_all_size
         )
 
         button_save_size = (
@@ -201,18 +232,20 @@ class Handler:
             *button_start_search_size
         )
 
-        # self.view.spinner.setGeometry(
-        #     button_start_search_pos[0] - 5,
-        #     self.view.main_top_margin,
-        #     self.view.top_buttons_height, 
-        #     self.view.top_buttons_height
-        # )
+        spinner_size = (
+            self.view.top_buttons_height, self.view.top_buttons_height
+        )
+        spinner_pos = (
+            button_start_search_pos[0] - spinner_size[0] - 5,
+            self.view.main_top_margin * 2 + spinner_size[1] / 2
+        )
+        self.view.spinner.setGeometry(*spinner_pos, *spinner_size)
 
         line_edit_lfs_size = (
             self.view.top_buttons_width / 2, self.view.top_buttons_height
         )
         line_edit_lfs_pos = (
-            button_start_search_pos[0] - line_edit_lfs_size[0] - 30,
+            spinner_pos[0] - line_edit_lfs_size[0] - 5,
             self.view.main_top_margin
         )
         self.view.lineEditHFS.setGeometry(
@@ -443,24 +476,23 @@ class Handler:
             del self.model.changed_curves[key]
         print("changed_curves: ", len(self.model.changed_curves))
     
+    def select_deselect_all(self) -> None:
+        """
+        Selects and deselects all checkboxes
+        """
+        if self.view.check_box_all.isChecked() == True:
+            self.model.changed_curves = self.model.dict_bandwidth_data["source"]
+            for checkbox in self.model.check_box_list:
+                checkbox.setChecked(True)
+        else:
+            self.model.changed_curves = []
+            for checkbox in self.model.check_box_list:
+                checkbox.setChecked(False)
+    
     def start_ep_passband_search(self) -> None:
         """
         Calls controller method.
         """
         self.view.spinner.show()
-        self.view.spinner.start()
-        result = self.controller.start_ep_passband_search()
-        print("result: ", result)
-        index_item = 0
-        for item in self.view.bandwidths:
-            print("item: ", item)
-            if list(result) == item:
-                print("index_item: ", index_item)
-                self.view.listBandwidths.item(index_item).setBackground(
-                    self.view.selected_item
-                )
-                break
-            index_item += 1
-        self.view.spinner.stop()
-        # self.view.spinner.hide()
-        self.view.selector_windows.show()
+        runnable = RequestRunnable(self)
+        QThreadPool.globalInstance().start(runnable)
