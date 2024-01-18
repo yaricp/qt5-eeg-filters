@@ -14,7 +14,8 @@ from PyQt5.QtWidgets import (
     QAction,
     QFileDialog,
     QLineEdit,
-    QCheckBox
+    QCheckBox,
+    QPushButton
 )
 
 import ui
@@ -409,10 +410,20 @@ class SelectorWindow(QWidget):
         self.label = QLabel("Selector Window")
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
-        
-        # self.selector_graph = pg.PlotWidget(self)
-        # self.selector_graph.setBackground('w')
 
+        self.buttonSave = QPushButton(self)
+        self.buttonSave.setGeometry(
+            self.parent.main_top_margin,
+            self.parent.main_left_margin,
+            self.parent.top_buttons_width * 2,
+            self.parent.top_buttons_height
+        )
+        self.buttonSave.setObjectName("buttonSave")
+        self.buttonSave.setText(
+            _translate("SelectorWindow", "Export data")
+        )
+        self.buttonSave.clicked.connect(self.save_event_handler)
+    
     @Slot()
     def closeEvent(self, event):
         self.closed.emit()
@@ -455,3 +466,14 @@ class SelectorWindow(QWidget):
         graphWidget.setColorMap(cmap)
     
         self.layout.addWidget(graphWidget)
+
+    def save_event_handler(self):
+        """
+        Handler for event save data of ep_bandpass_filter_selector
+        """
+        if not self.parent.main_window.config.target_dirpath:
+            self.parent.main_window.config.target_dirpath = self.parent.get_target_file_name()
+        if not self.parent.main_window.config.target_dirpath:
+            return False
+        self.parent.main_window.controller.ep_selector_export_data()
+        return True

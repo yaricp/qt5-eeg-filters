@@ -1,4 +1,4 @@
-# from loguru import logger
+import os
 
 from eeg_filters import upload as eeg_filters_upload
 from eeg_filters.filters import make_filter, search_max_min
@@ -7,7 +7,9 @@ from eeg_filters.export import export_curves, export_extremums
 from views import ViewGraph
 from models import Config, ModelData
 
-from passband_searcher import PassbandSearcher
+from passband_searcher import (
+    PassbandSearcher, export_data as ep_export_data
+)
 
 
 class Controller:
@@ -256,3 +258,20 @@ class Controller:
         print("Result:", result)
         return result
         
+    def ep_selector_export_data(self) -> None:
+        """
+        calls method save of ep_bandpass_filter_selector
+        """
+        bandpass = self.model.ep_found_bandpass
+        heatmap = self.model.ep_heatmap
+        target_dirpath = self.config.target_dirpath
+        target_filepath = os.path.join(
+            target_dirpath,
+            f"optimal_filter_{'_'.join([str(x) for x in bandpass])}.dat"
+        )
+        result = ep_export_data(
+            target_filepath,
+            bandpass,
+            heatmap
+        )
+        return result

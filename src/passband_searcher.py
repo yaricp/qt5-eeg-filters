@@ -181,3 +181,17 @@ class PassbandSearcher:
         return (
             self.filter_by_optimum[result_optimum], heatmap_data
         )
+
+
+def export_data(
+    filepath: str, bandpass: list, data: list
+) -> None:
+    """
+    Saves Data to file
+    """
+    with open(filepath, 'a') as outfile:
+        outfile.write(f"{','.join([str(x) for x in bandpass])};;;")
+        for row in data:
+            outfile.write(f"{','.join([str(x) for x in row])};")
+        outfile.write(';')
+    return True
