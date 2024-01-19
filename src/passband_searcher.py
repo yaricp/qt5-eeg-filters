@@ -1,3 +1,4 @@
+import csv
 import numpy as np
 from itertools import combinations
 
@@ -189,9 +190,9 @@ def export_data(
     """
     Saves Data to file
     """
-    with open(filepath, 'a') as outfile:
-        outfile.write(f"{','.join([str(x) for x in bandpass])};;;")
-        for row in data:
-            outfile.write(f"{','.join([str(x) for x in row])};")
-        outfile.write(';')
+    ith open(filepath, 'a', encoding='UTF8', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(bandpass)
+        writer.writerows(data)
+
     return True

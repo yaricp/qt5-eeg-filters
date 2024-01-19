@@ -267,7 +267,7 @@ class Controller:
         target_dirpath = self.config.target_dirpath
         target_filepath = os.path.join(
             target_dirpath,
-            f"optimal_filter_{'_'.join([str(x) for x in bandpass])}.dat"
+            f"optimal_filter_{'_'.join([str(x) for x in bandpass])}.csv"
         )
         result = ep_export_data(
             target_filepath,
