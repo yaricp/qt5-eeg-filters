@@ -377,6 +377,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
                 break
             index_item += 1
         self.spinner.hide()
+        self.setEnabled(False)
         self.create_selector_window()
         self.selector_window.draw_heatmap(heatmap)
         self.selector_window.show()
@@ -394,11 +395,11 @@ class SelectorWindow(QWidget):
         _translate = QtCore.QCoreApplication.translate
         self.setObjectName("SelectorWindow")
         self.parent = parent
-        start_size = 400, 400
+        start_size = 500, 500
         self.resize(*start_size)
         start_poz = (
             self.parent.x() + self.parent.width()/2 - self.width()/2,
-            self.parent.y() + self.parent.height()/2 - self.height()/2
+            self.parent.y() + 100
         )
         self.setGeometry(*start_poz, *start_size)
         self.setWindowTitle(_translate(
@@ -407,15 +408,15 @@ class SelectorWindow(QWidget):
         self.destroyed.connect(self.parent.on_selector_window_destroy)
 
         self.layout = QVBoxLayout()
-        self.label = QLabel("Selector Window")
-        self.layout.addWidget(self.label)
+        # self.label = QLabel("Selector Window")
+        # self.layout.addWidget(self.label)
         self.setLayout(self.layout)
 
-        self.buttonSave = QPushButton(self)
+        self.buttonSave = QPushButton()
         self.buttonSave.setGeometry(
             self.parent.main_top_margin,
             self.parent.main_left_margin,
-            self.parent.top_buttons_width * 2,
+            self.parent.top_buttons_width,
             self.parent.top_buttons_height
         )
         self.buttonSave.setObjectName("buttonSave")
@@ -423,6 +424,7 @@ class SelectorWindow(QWidget):
             _translate("SelectorWindow", "Export data")
         )
         self.buttonSave.clicked.connect(self.save_event_handler)
+        self.layout.addWidget(self.buttonSave)
     
     @Slot()
     def closeEvent(self, event):
@@ -456,7 +458,6 @@ class SelectorWindow(QWidget):
             image_data.append(np.asarray(image_row))
 
         graphWidget = pg.ImageView()
-    
         graphWidget.setImage(np.asarray(image_data))
         colors = [
             (0, 0, 0),(4, 5, 61),(84, 42, 55),(15, 87, 60),
@@ -464,8 +465,11 @@ class SelectorWindow(QWidget):
         ]
         cmap = pg.ColorMap(pos=np.linspace(0.0, 1.0, 6), color=colors)
         graphWidget.setColorMap(cmap)
-    
         self.layout.addWidget(graphWidget)
+        graphWidget.move(
+            self.buttonSave.x(),
+            self.buttonSave.y() + self.buttonSave.height() + 10
+        )
 
     def save_event_handler(self):
         """

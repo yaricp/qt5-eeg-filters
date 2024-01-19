@@ -190,7 +190,7 @@ def export_data(
     """
     Saves Data to file
     """
-    ith open(filepath, 'a', encoding='UTF8', newline='') as f:
+    with open(filepath, 'a', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(bandpass)
         writer.writerows(data)
