@@ -1,5 +1,5 @@
-docker
 scripts
 .env
 .git
 docker-compose.yml
+**__pycache__
