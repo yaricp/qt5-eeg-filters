@@ -453,7 +453,7 @@ class Handler:
 
     def add_new_bandwidth(self) -> None:
         """Handler event pressed button add bandwidth."""
-        text = self.view.lineEdit_3.text()
+        text = self.view.newBandwidthField.text()
         self.view.listBandwidths.addItem(text)
         splitted_text = text.split(',')
         value = [
@@ -461,7 +461,7 @@ class Handler:
             int(splitted_text[1].replace(']', '').replace(' ', ''))
         ]
         self.config.bandwidths.append(value)
-        self.view.lineEdit_3.clear()
+        self.view.newBandwidthField.clear()
 
     def curve_clicked(self, b) -> None:
         """
