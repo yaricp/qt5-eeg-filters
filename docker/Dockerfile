@@ -5,11 +5,12 @@ RUN apt install -y curl python3-pip bash
 RUN pip3 install poetry
 
 COPY poetry.lock  pyproject.toml ./docker/start.sh /
-COPY ./src /app
 
 WORKDIR /
 
 RUN poetry install
+
+COPY ./src /app
 
 ENTRYPOINT ["/usr/bin/bash", "-c"]
 

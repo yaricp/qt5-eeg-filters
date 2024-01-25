@@ -7,8 +7,9 @@ from eeg_filters.export import export_curves, export_extremums
 from views import ViewGraph
 from models import Config, ModelData
 
-from passband_searcher import (
-    PassbandSearcher, export_data as ep_export_data
+from ep_bandpass_filter_selector import (
+    PassbandSelector, 
+    export_data as ep_export_data
 )
 
 
@@ -233,7 +234,7 @@ class Controller:
         Starts EP bassband search
         """
         # self.model.selector_filter_borders
-        pbs = PassbandSearcher(
+        pbs = PassbandSelector(
             curves=self.model.changed_curves.values(),
             tick_times=self.model.tick_times,
             fsr=self.config.fs,
