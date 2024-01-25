@@ -367,15 +367,25 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         heatmap = self.main_window.model.ep_heatmap
         print("bandpass: ", bandpass)
         index_item = 0
+        flag_found = False
         for item in self.bandwidths:
             print("item: ", item)
             if list(bandpass) == item:
                 print("index_item: ", index_item)
+                flag_found = True
                 self.listBandwidths.item(index_item).setBackground(
                     self.selected_item
                 )
                 break
             index_item += 1
+        if not flag_found:
+            self.listBandwidths.addItem(str(list(bandpass)))
+            self.main_window.config.bandwidths.append(list(bandpass))
+            self.listBandwidths.item(
+                len(self.main_window.config.bandwidths) - 1
+            ).setBackground(
+                self.selected_item
+            )
         self.spinner.hide()
         self.setEnabled(False)
         self.create_selector_window()

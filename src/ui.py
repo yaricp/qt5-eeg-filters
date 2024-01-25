@@ -91,6 +91,7 @@ class Ui_MainWindow(object):
 
         self.buttonStartSearch = QtWidgets.QPushButton(self.centralwidget)
         self.buttonStartSearch.setObjectName("buttonStartSearch")
+        self.buttonStartSearch.setEnabled(False)
 
         self.lineEditHFRH = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEditHFRH.setObjectName("lineEditHFRH")

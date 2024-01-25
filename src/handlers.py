@@ -475,6 +475,10 @@ class Handler:
         else:
             del self.model.changed_curves[key]
         print("changed_curves: ", len(self.model.changed_curves))
+        if len(self.model.changed_curves) >= 2:
+            self.view.buttonStartSearch.setEnabled(True)
+        else:
+            self.view.buttonStartSearch.setEnabled(False)
     
     def select_deselect_all(self) -> None:
         """
@@ -484,10 +488,12 @@ class Handler:
             self.model.changed_curves = self.model.dict_bandwidth_data["source"]
             for checkbox in self.model.check_box_list:
                 checkbox.setChecked(True)
+            self.view.buttonStartSearch.setEnabled(True)
         else:
             self.model.changed_curves = []
             for checkbox in self.model.check_box_list:
                 checkbox.setChecked(False)
+            self.view.buttonStartSearch.setEnabled(False)
     
     def start_ep_passband_search(self) -> None:
         """
