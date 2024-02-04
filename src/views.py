@@ -1,6 +1,6 @@
 import numpy as np
 from functools import partial
-# from loguru import logger
+from loguru import logger
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Slot, Signal
@@ -257,7 +257,8 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
     def create_graph(self, time_stamp):
         """Create new plot for new curve."""
         plot = self.graph.plot(
-            name=time_stamp, clickable=True
+            name=time_stamp, clickable=True, 
+            pen=pg.mkPen(color=(0,0,0), width=1.5)
         )
         plot.sigClicked.connect(
             self.plot_clicked
@@ -346,17 +347,21 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
     def get_source_file_name(self):
         """Get name of source file."""
+        path = "./"
+        if self.main_window.model.prev_path_open:
+            path = self.main_window.model.prev_path_open
         return self.file_dialog_open.getOpenFileName(
-            self,
-            'Open source file',
-            './')[0]
+            self, 'Open source file', path
+        )
 
     def get_target_file_name(self):
         """Get name of target file."""
+        path = "./"
+        if self.main_window.model.prev_path_export:
+            path = self.main_window.model.prev_path_export
         return self.file_dialog_save.getExistingDirectory(
-            self,
-            'Save filtered data',
-            './')
+            self, 'Save filtered data', path
+        )
 
     @Slot()
     def get_selector_result(self):
@@ -420,16 +425,13 @@ class SelectorWindow(QWidget):
         self.graph = pg.GraphicsLayoutWidget()
 
         self.view_box = pg.ViewBox()
-        self.view_box.addItem(image)
+        
         self.plot = pg.PlotItem()
         self.plot.setLabel(axis='left', text='Y-axis')
         self.plot.setLabel(axis='bottom', text='X-axis')
         self.heatmap = pg.ImageView(view=self.plot)
         self.heat_vbox = self.heatmap.getView()
         
-        # self.plot = pg.PlotItem(viewBox=self.view_box)
-        # self.graph.addItem(self.plot)
-
         self.layout = QVBoxLayout()
         self.label = QLabel("Selector Window")
         self.layout.addWidget(self.label)
@@ -482,16 +484,28 @@ class SelectorWindow(QWidget):
             image_data.append(np.asarray(image_row))
 
         self.heatmap.setImage(np.asarray(image_data))
-        
         colors = [
             (0, 0, 0),(4, 5, 61),(84, 42, 55),(15, 87, 60),
             (208, 17, 141),(255, 255, 255)
         ]
         cmap = pg.ColorMap(pos=np.linspace(0.0, 1.0, 6), color=colors)
         self.heatmap.setColorMap(cmap)
+
+        found_bond = self.parent.main_window.model.ep_found_bandpass
+        self.label.setText(f"Found filter: {str(found_bond)}")
         
-        self.heat_vbox.addItem(pg.LabelItem("this is a nice label"))
-        
+        x_axis_labels = [list(
+            zip(range(len(low_borders)),low_borders)
+        )]
+        y_axis_labels = [list(
+            zip(range(len(high_borders)),high_borders)
+        )]
+
+        xax = self.plot.getAxis('bottom')
+        xax.setTicks(x_axis_labels)
+        yax = self.plot.getAxis('left')
+        yax.setTicks(y_axis_labels)
+
         self.heatmap.move(
             self.buttonSave.x(),
             self.buttonSave.y() + self.buttonSave.height() + 10

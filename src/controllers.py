@@ -88,7 +88,7 @@ class Controller:
         """
         if not self.config.source_filepath:
             return False
-
+        flag_new = True
         self.model.dict_bandwidth_data = {}
         self.model.clear_extremums()
         (
@@ -101,9 +101,6 @@ class Controller:
         if self.model.total_count == 0:
             return False
         dict_curves_filtred = {}
-        flag_new = False
-        if self.view.is_graph_empty():
-            flag_new = True
         for time_stamp, row in zip(self.model.list_times, self.model.list_data):
             self.counter_proc += 1
             progress = self.counter_proc * self.counter_factor / self.model.total_count

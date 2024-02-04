@@ -1,6 +1,6 @@
 import time
 
-# from loguru import logger
+from loguru import logger
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import (
     Qt, QThreadPool, QMetaObject, QRunnable
@@ -377,7 +377,17 @@ class Handler:
         Show dialog window.
         Returns - True if ok.
         """
-        self.config.source_filepath = self.view.get_source_file_name()
+        logger.info("show dialog open")
+        self.config.source_filepath, _ = self.view.get_source_file_name()
+
+        filename = self.config.source_filepath.split("/")[-1]
+        self.model.prev_path_open = self.config.source_filepath.replace(
+            filename, ""
+        )
+
+        logger.info(
+            f"self.config.source_filepath: {self.config.source_filepath}"
+        )
 
         if not self.config.source_filepath:
             return False
@@ -397,10 +407,17 @@ class Handler:
         Handler event save button pressed.
         Returns - True if ok.
         """
+
         if not self.config.target_dirpath:
             self.config.target_dirpath = self.view.get_target_file_name()
         if not self.config.target_dirpath:
             return False
+
+        filename = self.config.target_dirpath.split("/")[-1]
+        self.model.prev_path_export = self.config.target_dirpath.replace(
+            filename, ""
+        )
+
         QApplication.processEvents()
         self.view.show_progress_bar()
         self.controller.counter_proc = 0
@@ -468,13 +485,15 @@ class Handler:
         Changes dict of changed curves.
         """
         key = b.text()
+        index_curve = self.model.list_times.index(key)
+        graph_plot_item = self.view.graph.getPlotItem().items[index_curve]
         curve = self.model.dict_bandwidth_data["source"][key]
-        print(f"key: {key}, len curve: {len(curve)}")
         if b.isChecked() == True:
             self.model.changed_curves[key] = curve
+            graph_plot_item.setPen(color="g", width=3)
         else:
             del self.model.changed_curves[key]
-        print("changed_curves: ", len(self.model.changed_curves))
+            graph_plot_item.setPen(color=(0,0,0), width=2)
         if len(self.model.changed_curves) >= 2:
             self.view.buttonStartSearch.setEnabled(True)
         else:
@@ -485,12 +504,10 @@ class Handler:
         Selects and deselects all checkboxes
         """
         if self.view.check_box_all.isChecked() == True:
-            self.model.changed_curves = self.model.dict_bandwidth_data["source"]
             for checkbox in self.model.check_box_list:
                 checkbox.setChecked(True)
             self.view.buttonStartSearch.setEnabled(True)
         else:
-            self.model.changed_curves = []
             for checkbox in self.model.check_box_list:
                 checkbox.setChecked(False)
             self.view.buttonStartSearch.setEnabled(False)

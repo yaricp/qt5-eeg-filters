@@ -42,6 +42,9 @@ class ModelData:
     tick_times = 0
     check_box_list = []
 
+    prev_path_open = ""
+    prev_path_export = ""
+
     # for ep_passband_filter_selector
     changed_curves = {}
     ep_found_bandpass = []
