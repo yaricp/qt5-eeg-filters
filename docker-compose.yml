@@ -5,6 +5,7 @@ services:
     image: "${DOCKER_IMAGE?Variable not set}:${TAG-latest}"
     environment:
       - DISPLAY=${DISPLAY}
+      - QT_DEBUG_PLUGINS=${QT_DEBUG_PLUGINS}
     volumes:
       - ./:/app
       - /tmp/.X11-unix:/tmp/.X11-unix
