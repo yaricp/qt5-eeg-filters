@@ -3,7 +3,7 @@ from functools import partial
 from loguru import logger
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Slot, Signal
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QWidget,
@@ -363,7 +363,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             self, 'Save filtered data', path
         )
 
-    @Slot()
+    @pyqtSlot()
     def get_selector_result(self):
         """
         Gets result and show new window with graph.
@@ -403,7 +403,7 @@ class SelectorWindow(QWidget):
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
     """
-    closed = Signal()
+    closed = pyqtSignal()
 
     def __init__(self, parent):
         super().__init__()
@@ -452,7 +452,7 @@ class SelectorWindow(QWidget):
         self.buttonSave.clicked.connect(self.save_event_handler)
         self.layout.addWidget(self.buttonSave)
     
-    @Slot()
+    @pyqtSlot()
     def closeEvent(self, event):
         self.closed.emit()
         super().closeEvent(event)

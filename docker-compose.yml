@@ -16,7 +16,7 @@ services:
       context: ./
       dockerfile: ./docker/Dockerfile
       args:
-        INSTALL_DEV: ${INSTALL_DEV-false}
+        INSTALL_TZ: ${INSTALL_TZ}
 
 volumes:
   app-db-data:

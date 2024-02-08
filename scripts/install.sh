@@ -1,5 +1,7 @@
 #!/bin/bash
-sudo apt install -y curl python3 python3-pip qt5-default
+
+apt update -y;
+apt install -y curl python3 python3-pip python3-pyqt5
 pip3 install poetry
 cd ../
 export PATH=$PATH:$HOME/.local/bin
