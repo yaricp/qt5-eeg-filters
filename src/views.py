@@ -221,7 +221,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             showed_extremum.model_params = params + (time_stamp,)
             showed_extremum.setData(
                 pos=np.array([[time_extremum, value_extremum]])
-                )
+            )
 
         return True
 

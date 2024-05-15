@@ -120,6 +120,7 @@ class Controller:
             minimums = {}
             for time_stamp in self.model.list_times:
                 self.counter_proc += 1
+
                 progress = self.counter_proc * self.counter_factor / self.model.total_count
                 self.view.set_progress_value(progress)
                 # create new points on graphic for extremums
@@ -219,12 +220,17 @@ class Controller:
                     times_ranges
                 )
 
-    def change_extremum_data(self, time, value, *args):
+    def change_extremum_data(self, time, *args):
         """
         Save changed value of extremum point when user move this point by curve.
         """
+        curve_data = self.model.dict_bandwidth_data[args[1]][args[2]]
+        ind = index[curve_data.index.get_loc(time, method="nearest")]
+        value = curve_data.loc[ind].to_list()[0]
         model = self.model.dict_extremums_data
-        model[args[0]][args[1]][args[2]] = (time, value)
+        model[args[0]][args[1]][args[2]] = (
+            time, value
+        )
 
     def start_ep_passband_search(self) -> None:
         """
