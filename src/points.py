@@ -57,6 +57,10 @@ class DraggablePoint(pg.GraphItem):
                 return
 
         new_x = round(ev.pos()[0] + self.dragOffset, 4)
+        ind = self.curve.index[self.curve.index.get_loc(
+            new_x, method="nearest"
+        )]
+        new_y = self.curve.loc[ind].to_list()[0]
         self.data['pos'] = np.array([[ind, new_y]])
         self.controller.change_extremum_data(
             new_x, *self.model_params
