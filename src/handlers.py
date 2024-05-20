@@ -511,7 +511,7 @@ class Handler:
             for checkbox in self.model.check_box_list:
                 checkbox.setChecked(False)
             self.view.buttonStartSearch.setEnabled(False)
-    
+
     def start_ep_passband_search(self) -> None:
         """
         Calls controller method.

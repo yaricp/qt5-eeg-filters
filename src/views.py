@@ -258,7 +258,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         """Create new plot for new curve."""
         plot = self.graph.plot(
             name=time_stamp, clickable=True, 
-            pen=pg.mkPen(color=(0,0,0), width=1.5)
+            pen=pg.mkPen(color=(0, 0, 0), width=1.5)
         )
         plot.sigClicked.connect(
             self.plot_clicked

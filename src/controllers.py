@@ -8,7 +8,7 @@ from views import ViewGraph
 from models import Config, ModelData
 
 from ep_bandpass_filter_selector import (
-    PassbandSelector, 
+    PassbandSelector,
     export_data as ep_export_data
 )
 
@@ -225,7 +225,7 @@ class Controller:
         Save changed value of extremum point when user move this point by curve.
         """
         curve_data = self.model.dict_bandwidth_data[args[1]][args[2]]
-        ind = index[curve_data.index.get_loc(time, method="nearest")]
+        ind = curve_data.index[curve_data.index.get_loc(time, method="nearest")]
         value = curve_data.loc[ind].to_list()[0]
         model = self.model.dict_extremums_data
         model[args[0]][args[1]][args[2]] = (
@@ -261,7 +261,7 @@ class Controller:
         result = pbs.start()
         print("Result:", result)
         return result
-        
+
     def ep_selector_export_data(self) -> None:
         """
         calls method save of ep_bandpass_filter_selector
