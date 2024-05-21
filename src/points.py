@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pyqtgraph as pg
 from PyQt5 import QtCore
-from loguru import logger
+frъom loguru import logger
 
 
 class DraggablePoint(pg.GraphItem):
@@ -55,15 +55,15 @@ class DraggablePoint(pg.GraphItem):
             if self.dragPoint is None:
                 ev.ignore()
                 return
-
+        print(f"type of self.curve: {type(self.curve)}")
         new_x = round(ev.pos()[0] + self.dragOffset, 4)
-        ind = self.curve.index[self.curve.index.get_loc(
-            new_x, method="nearest"
+        ind = self.curve.index[self.curve.index.get_indexer(
+            [new_x], method="nearest"
         )]
         new_y = self.curve.loc[ind].to_list()[0]
         self.data['pos'] = np.array([[ind, new_y]])
         self.controller.change_extremum_data(
-            new_x, *self.model_params
+            ind, *self.model_params
         )
         self.update_graph()
         ev.accept()

@@ -225,8 +225,12 @@ class Controller:
         Save changed value of extremum point when user move this point by curve.
         """
         curve_data = self.model.dict_bandwidth_data[args[1]][args[2]]
-        ind = curve_data.index[curve_data.index.get_loc(time, method="nearest")]
-        value = curve_data.loc[ind].to_list()[0]
+        print(f"type of curve_data: {type(curve_data)}")
+        # ind = curve_data.index[curve_data.index.get_loc(
+        #     time, method="nearest"
+        # )]
+        ind = self.model.list_times.index(time)
+        value = curve_data[ind]
         model = self.model.dict_extremums_data
         model[args[0]][args[1]][args[2]] = (
             time, value
