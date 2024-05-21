@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pyqtgraph as pg
 from PyQt5 import QtCore
-frъom loguru import logger
+from loguru import logger
 
 
 class DraggablePoint(pg.GraphItem):
