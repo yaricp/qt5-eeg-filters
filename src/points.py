@@ -55,15 +55,22 @@ class DraggablePoint(pg.GraphItem):
             if self.dragPoint is None:
                 ev.ignore()
                 return
-        print(f"type of self.curve: {type(self.curve)}")
+        # logger.info(f"self.curve.index: {self.curve.index}" )
+        
         new_x = round(ev.pos()[0] + self.dragOffset, 4)
+        # logger.info(f"new_x: {new_x}")
         ind = self.curve.index[self.curve.index.get_indexer(
             [new_x], method="nearest"
         )]
-        new_y = self.curve.loc[ind].to_list()[0]
-        self.data['pos'] = np.array([[ind, new_y]])
+        new_y = self.curve["Y"].loc[ind].values[0]
+        # logger.info(f"value: {new_y}")
+        index_time = ind.to_list()[0]
+        # logger.info(f"found index_time: {index_time}")
+        self.data['pos'] = np.array(
+            [[index_time, new_y]]
+        )
         self.controller.change_extremum_data(
-            ind, *self.model_params
+            index_time, *self.model_params
         )
         self.update_graph()
         ev.accept()

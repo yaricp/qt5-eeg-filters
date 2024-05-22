@@ -1,4 +1,6 @@
 import os
+import numpy as np
+from loguru import logger
 
 from eeg_filters import upload as eeg_filters_upload
 from eeg_filters.filters import make_filter, search_max_min
@@ -224,16 +226,26 @@ class Controller:
         """
         Save changed value of extremum point when user move this point by curve.
         """
+        logger.info(f"tick time: {time}")
         curve_data = self.model.dict_bandwidth_data[args[1]][args[2]]
-        print(f"type of curve_data: {type(curve_data)}")
-        # ind = curve_data.index[curve_data.index.get_loc(
-        #     time, method="nearest"
-        # )]
-        ind = self.model.list_times.index(time)
-        value = curve_data[ind]
         model = self.model.dict_extremums_data
+        logger.info(f"args[0]: {args[0]}")
+        logger.info(f"args[1]: {args[1]}")
+        logger.info(f"args[2]: {args[2]}")
+        logger.info(
+            f"what needs change: {model[args[0]][args[1]][args[2]]}"
+        )
+        ind = np.where(
+            self.model.tick_times == time
+        )
+        value = curve_data[ind][0]
+        logger.info(f"New real value: {value}")
+        
         model[args[0]][args[1]][args[2]] = (
             time, value
+        )
+        logger.info(
+            f"Changed: {model[args[0]][args[1]][args[2]]}"
         )
 
     def start_ep_passband_search(self) -> None:
