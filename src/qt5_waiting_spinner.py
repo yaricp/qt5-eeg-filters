@@ -48,9 +48,9 @@ class QtWaitingSpinner(QWidget):
         # WAS IN initialize()
         self._color = QColor(Qt.black)
         self._roundness = 100.0
-        self._minimumTrailOpacity = 3.14159265358979323846
+        self._minimumTrailOpacity = 3.14
         self._trailFadePercentage = 80.0
-        self._revolutionsPerSecond = 1.57079632679489661923
+        self._revolutionsPerSecond = 1.57
         self._numberOfLines = 20
         self._lineLength = 10
         self._lineWidth = 2
@@ -185,11 +185,15 @@ class QtWaitingSpinner(QWidget):
         self.update()
 
     def updateSize(self):
-        size = (self._innerRadius + self._lineLength) * 2
+        size = int(self._innerRadius + self._lineLength) * 2
         self.setFixedSize(size, size)
 
     def updateTimer(self):
-        self._timer.setInterval(1000 / (self._numberOfLines * self._revolutionsPerSecond))
+        self._timer.setInterval(
+            int(
+                1000 / (self._numberOfLines * self._revolutionsPerSecond)
+            )
+        )
 
     def updatePosition(self):
         if self.parentWidget() and self._centerOnParent:

@@ -11,7 +11,7 @@ RUN echo $INSTALL_TZ > /etc/timezone && \
     apt-get clean
 
 RUN apt update && apt upgrade -y
-RUN apt install -y curl python3-pip python3-pyqt5 bash
+RUN apt install -y curl python3-pip python3-pyqt5 bash qt5-qmake
 RUN pip3 install poetry
 
 COPY poetry.lock  pyproject.toml ./docker/start.sh /
