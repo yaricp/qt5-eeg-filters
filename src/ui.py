@@ -93,6 +93,10 @@ class Ui_MainWindow(object):
         self.buttonStartSearch.setObjectName("buttonStartSearch")
         self.buttonStartSearch.setEnabled(False)
 
+        self.buttonOpenEPSettings = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonOpenEPSettings.setObjectName("buttonOpenEPSettings")
+        self.buttonOpenEPSettings.setEnabled(True)
+
         self.lineEditHFRH = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEditHFRH.setObjectName("lineEditHFRH")
 
@@ -137,6 +141,7 @@ class Ui_MainWindow(object):
         self.buttonAdd.setText(_translate("MainWindow", "Add"))
         self.buttonVisibleRegion.setText(_translate("MainWindow", "HideRegions"))
         self.buttonStartSearch.setText(_translate("MainWindow", "StartSearch"))
+        self.buttonOpenEPSettings.setText(_translate("MainWindow", "OpenEPSettings"))
         self.buttonSave.setText(_translate("MainWindow", "Save"))
         self.actionopen.setText(_translate("MainWindow", "open"))
         self.actionsave.setText(_translate("MainWindow", "save"))

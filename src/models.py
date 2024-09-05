@@ -18,7 +18,7 @@ class Config:
     iter_value = MAX_ITER_VALUE * DEFAULT_STEP_ITER / MAX_STEP_ITER
     source_filepath = ''
     target_dirpath = ''
-    fs = None
+    fs = 0
 
     # for ep_passband_filter_selector
 
@@ -39,7 +39,7 @@ class ModelData:
 
     list_times = []
     list_data = []
-    tick_times = 0
+    tick_times = []
     check_box_list = []
 
     prev_path_open = ""
@@ -50,6 +50,9 @@ class ModelData:
     ep_found_bandpass = []
     ep_heatmap = {}
 
+    default_p2p_coeff_variant = ""
+    default_cur_var_coeff_variant = ""
+    base_region = ()
 
     def clear_extremums(self) -> None:
         """ Clear dict of extremums."""

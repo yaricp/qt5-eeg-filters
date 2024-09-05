@@ -37,12 +37,20 @@ BANDWIDTHS = [
 
 # for ep_bandpass_filter_selector
 
-LFRL=5
-LFRH=20
-LFS=5
+LFRL = 5
+LFRH = 20
+LFS = 5
 
-HFRL=100
-HFRH=500
-HFS=50
+HFRL = 100
+HFRH = 500
+HFS = 50
 
+curve_variability_coeff_variants = [
+    "curve_variability", "peak_variability"
+]
+default_curve_variability_coeff_variant = "peak_variability"
 
+p2p_coeff_variants = [
+    "p2p_abs", "p2p_rel"
+]
+default_p2p_coeff_variant = "p2p_abs"

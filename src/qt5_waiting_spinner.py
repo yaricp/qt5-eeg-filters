@@ -88,8 +88,15 @@ class QtWaitingSpinner(QWidget):
             color = self.currentLineColor(distance, self._numberOfLines, self._trailFadePercentage,
                                           self._minimumTrailOpacity, self._color)
             painter.setBrush(color)
-            painter.drawRoundedRect(QRect(0, -self._lineWidth / 2, self._lineLength, self._lineWidth), self._roundness,
-                                    self._roundness, Qt.RelativeSize)
+            painter.drawRoundedRect(
+                QRect(
+                    0, int(-self._lineWidth / 2),
+                    int(self._lineLength), int(self._lineWidth)
+                ),
+                self._roundness,
+                self._roundness,
+                Qt.RelativeSize
+            )
             painter.restore()
 
     def start(self):

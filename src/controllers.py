@@ -67,6 +67,12 @@ class Controller:
         for key_curv, row in zip(
             self.model.list_times, self.model.list_data
         ):
+            logger.info(f"len row: {len(row)}")
+            logger.info(f"bandwidth: {bandwidth}")
+            logger.info(f"self.config.fs: {self.config.fs}")
+            logger.info(f"self.config.filter_order: {self.config.filter_order}")
+            logger.info(f"self.config.ripple: {self.config.ripple}")
+
             filtred_data = make_filter(
                 row,
                 bandwidth,
@@ -137,6 +143,7 @@ class Controller:
             })
         self.model.dict_bandwidth_data.update(
             {'source': dict_curves_filtred})
+        return True
 
     def get_data_show_graphics(self):
         """Get all data for plots and call functions for show plots."""
@@ -248,17 +255,20 @@ class Controller:
             f"Changed: {model[args[0]][args[1]][args[2]]}"
         )
 
-    def start_ep_passband_search(self) -> None:
+    def start_ep_passband_search(self) -> tuple:
         """
         Starts EP bassband search
         """
         # self.model.selector_filter_borders
         pbs = PassbandSelector(
-            curves=self.model.changed_curves.values(),
+            curves=list(self.model.changed_curves.values()),
             tick_times=self.model.tick_times,
             fsr=self.config.fs,
             max_search_range=self.view.range_search_maxmums.getRegion(),
             min_search_range=self.view.range_search_minimums.getRegion(),
+            p2p_coeff_variant=self.model.default_p2p_coeff_variant,
+            cur_var_coeff_variant=self.model.default_cur_var_coeff_variant,
+            base_region=self.model.base_region,
             filter_high_limit_range=(
                 self.view.lineEditHFRL.text(),
                 self.view.lineEditHFRH.text()

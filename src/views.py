@@ -36,6 +36,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
         self.main_window = main
         self.selector_window = None
+        self.selector_settings_window = None
         self.iter_value = config.iter_value
         self.max_start_search = config.max_start_search
         self.max_end_search = config.max_end_search
@@ -59,7 +60,6 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.spinner.setInnerRadius(1 / 6 * self.top_buttons_height)
         self.spinner.start()
         self.spinner.hide()
-
 
         self.progressBar.setMaximum(100)
         self.listBandwidths.addItems(
@@ -110,6 +110,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.save_clicked_event = self.buttonSave.clicked
         self.toggle_visible_regions_event = self.buttonVisibleRegion.clicked
         self.start_ep_passband_search_event = self.buttonStartSearch.clicked
+        self.open_ep_settings_event = self.buttonOpenEPSettings.clicked
 
         self.slider1.setMinimum(0)
         self.slider1.setMaximum(self.max_step_iter)
@@ -141,7 +142,6 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         """
         Creates a new window for results of EP Bandpass filter selector.
         """
-
         self.selector_window = SelectorWindow(self)
         self.selector_window.closed.connect(
             self.on_selector_window_destroy
@@ -150,6 +150,21 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
     def on_selector_window_destroy(self):
         """
         Sets Enabled to True when selector windows closed.
+        """
+        self.setEnabled(True)
+
+    def create_selector_settings_window(self):
+        """
+        Creates a new window for EP settings.
+        """
+        self.selector_settings_window = SelectorSettingsWindow(self)
+        self.selector_settings_window.closed.connect(
+            self.on_selector_settings_window_destroy
+        )
+
+    def on_selector_settings_window_destroy(self):
+        """
+        Sets Enabled to True when selector settings windows closed.
         """
         self.setEnabled(True)
 
@@ -245,7 +260,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
     def set_progress_value(self, value):
         """Set value of progress of process."""
-        self.progressBar.setValue(value)
+        self.progressBar.setValue(int(value))
         QApplication.processEvents()
 
     def add_ranges_extremums(self):
@@ -266,7 +281,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
     def plot_clicked(self) -> None:
         """
-
+        Event plot clicked
         """
         print("Curve Clicked!!!")
 
@@ -397,6 +412,12 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.selector_window.draw_heatmap(heatmap)
         self.selector_window.show()
 
+    def open_ep_settings_window(self):
+        """Opens EP settings windows"""
+        self.setEnabled(False)
+        self.create_selector_settings_window()
+        self.selector_settings_window.show()
+
 
 class SelectorWindow(QWidget):
     """
@@ -413,8 +434,8 @@ class SelectorWindow(QWidget):
         start_size = 500, 500
         self.resize(*start_size)
         start_poz = (
-            self.parent.x() + self.parent.width()/2 - self.width()/2,
-            self.parent.y() + 100
+            int(self.parent.x() + self.parent.width()/2 - self.width()/2),
+            int(self.parent.y() + 100)
         )
         self.setGeometry(*start_poz, *start_size)
         self.setWindowTitle(_translate(
@@ -521,3 +542,71 @@ class SelectorWindow(QWidget):
             return False
         self.parent.main_window.controller.ep_selector_export_data()
         return True
+
+
+class SelectorSettingsWindow(QWidget):
+    """
+    This "window" is a QWidget. If it has no parent, it
+    will appear as a free-floating window as we want.
+    """
+    closed = pyqtSignal()
+
+    def __init__(self, parent):
+        super().__init__()
+        _translate = QtCore.QCoreApplication.translate
+        self.setObjectName("EPSettingsWindow")
+        self.parent = parent
+        start_size = 500, 500
+        self.resize(*start_size)
+        start_poz = (
+            int(self.parent.x() + self.parent.width()/2 - self.width()/2),
+            int(self.parent.y() + 100)
+        )
+        self.setGeometry(*start_poz, *start_size)
+        self.setWindowTitle(_translate(
+            "SelectorSettingsWindow", "EP Settings"
+        ))
+        self.destroyed.connect(self.parent.on_selector_window_destroy)
+
+        # self.graph = pg.GraphicsLayoutWidget()
+
+        # self.view_box = pg.ViewBox()
+        
+        # self.plot = pg.PlotItem()
+        # self.plot.setLabel(axis='left', text='Y-axis')
+        # self.plot.setLabel(axis='bottom', text='X-axis')
+        # self.heatmap = pg.ImageView(view=self.plot)
+        # self.heat_vbox = self.heatmap.getView()
+        
+        self.layout = QVBoxLayout()
+        self.label = QLabel("EP Settings")
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
+
+        self.buttonSave = QPushButton()
+        self.buttonSave.setGeometry(
+            self.parent.main_top_margin,
+            self.parent.main_left_margin,
+            self.parent.top_buttons_width,
+            self.parent.top_buttons_height
+        )
+        self.buttonSave.setObjectName("buttonSave")
+        self.buttonSave.setText(
+            _translate("SelectorSettingsWindow", "Save")
+        )
+        self.buttonSave.clicked.connect(self.save_event_handler)
+        self.layout.addWidget(self.buttonSave)
+
+    @pyqtSlot()
+    def closeEvent(self, event):
+        self.closed.emit()
+        super().closeEvent(event)
+
+    @pyqtSlot()
+    def save_event_handler(self):
+        """
+        Handler for event save settings of EP
+        """
+        self.parent.main_window.model.base_region = (1, 2)
+        self.closed.emit()
+        self.close()

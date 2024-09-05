@@ -69,6 +69,9 @@ class MainWindow:
         self.view.start_ep_passband_search_event.connect(
             self.handler.start_ep_passband_search
         )
+        self.view.open_ep_settings_event.connect(
+            self.handler.open_ep_settings
+        )
 
 
 if __name__ == '__main__':

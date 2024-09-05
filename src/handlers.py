@@ -16,12 +16,13 @@ class RequestRunnable(QRunnable):
         """
         Starts new threads for selector.
         """
-        bandpass, heatmap = self.handler.controller.start_ep_passband_search()
-        self.handler.model.ep_found_bandpass = bandpass
-        self.handler.model.ep_heatmap = heatmap
-        QMetaObject.invokeMethod(
-            self.handler.view, "get_selector_result", Qt.QueuedConnection
-        )
+        self.handler.view.spinner.show()
+        # bandpass, heatmap = self.handler.controller.start_ep_passband_search()
+        # self.handler.model.ep_found_bandpass = bandpass
+        # self.handler.model.ep_heatmap = heatmap
+        # QMetaObject.invokeMethod(
+        #     self.handler.view, "get_selector_result", Qt.QueuedConnection
+        # )
 
 
 class Handler:
@@ -327,6 +328,20 @@ class Handler:
             *line_edit_hfrh_size
         )
 
+        button_ep_settings_size = (
+            int(self.view.top_buttons_width), 
+            int(self.view.top_buttons_height)
+        )
+        button_ep_settings_pos = (
+            int(line_edit_hfrh_pos[0] - button_ep_settings_size[0] - 5),
+            int(self.view.main_top_margin)
+        )
+        
+        self.view.buttonOpenEPSettings.setGeometry(
+            *button_ep_settings_pos,
+            *button_ep_settings_size
+        )
+
     def bandwidths_activated(self, item) -> None:
         """
         Handler change bandwidth.
@@ -512,7 +527,7 @@ class Handler:
             self.view.buttonStartSearch.setEnabled(True)
         else:
             self.view.buttonStartSearch.setEnabled(False)
-    
+  
     def select_deselect_all(self) -> None:
         """
         Selects and deselects all checkboxes
@@ -530,6 +545,26 @@ class Handler:
         """
         Calls controller method.
         """
-        self.view.spinner.show()
         runnable = RequestRunnable(self)
         QThreadPool.globalInstance().start(runnable)
+        #try:
+        bandpass, heatmap = self.controller.start_ep_passband_search()
+        self.model.ep_found_bandpass = bandpass
+        self.model.ep_heatmap = heatmap
+        QMetaObject.invokeMethod(
+            self.view, "get_selector_result", Qt.QueuedConnection
+        )
+        #except Exception as err:
+        #    logger.error(f"Error: {err}")
+           
+        # self.view.spinner.show()
+        # runnable = RequestRunnable(self)
+        # try:
+        #     QThreadPool.globalInstance().start(runnable)
+        # except Exception as err:
+        #     logger.error(f"Error: {err}")
+
+    def open_ep_settings(self) -> None:
+        """Open EP settings window"""
+        logger.info("event open EP settings window")
+        self.view.open_ep_settings_window()
