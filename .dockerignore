@@ -3,3 +3,6 @@ scripts
 .git
 docker-compose.yml
 **__pycache__
+**data
+**.DS_Store
+src/ep_bandpass_filter_selector

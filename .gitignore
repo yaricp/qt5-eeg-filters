@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+**data
+**.DS_Store
+src/ep_bandpass_filter_selector
 
 # C extensions
 *.so
