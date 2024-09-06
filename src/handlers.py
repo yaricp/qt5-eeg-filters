@@ -1,4 +1,4 @@
-import time
+# import time
 
 from loguru import logger
 from PyQt5.QtWidgets import QApplication
@@ -52,7 +52,7 @@ class Handler:
         self.view.progressBar.setGeometry(
             *progress_bar_pos, *progress_bar_size
         )
-        
+
         button_add_passband_size = (
             self.view.bandwidth_area_width, 
             self.view.top_buttons_height
@@ -66,7 +66,7 @@ class Handler:
         self.view.buttonAdd.setGeometry(
             *button_add_passband_pos, *button_add_passband_size
         )
-        
+
         new_bandwidth_field_size = (
             self.view.bandwidth_area_width, self.view.top_buttons_height
         )
@@ -77,7 +77,7 @@ class Handler:
         self.view.newBandwidthField.setGeometry(
             *new_bandwidth_field_pos, *new_bandwidth_field_size
         )
-        
+
         list_bandwidths_top_margin = (
             self.view.main_top_margin + self.view.top_buttons_height + 5
         )
@@ -103,7 +103,7 @@ class Handler:
         self.view.slider1.setGeometry(
             *slider1_pos, *slider1_size
         )
-        
+
         graph_size = (
             slider1_pos[0]
             - 5 
@@ -143,7 +143,7 @@ class Handler:
                 - self.view.left_checkboxes_height/2
             )
         )
-        
+
         self.view.check_box_all.setGeometry(
             *check_box_all_pos, *check_box_all_size
         )
@@ -225,16 +225,17 @@ class Handler:
             *line_edit_min_end_size
         )
 
+        button_start_search_size = (
+            2 * int(self.view.top_buttons_width), 
+            int(self.view.top_buttons_height)
+        )
         button_start_search_pos = (
             int(self.view.width() - (
-                self.view.main_left_margin + self.view.top_buttons_width
+                self.view.main_left_margin + button_start_search_size[0]
             )),
             int(self.view.main_top_margin)
         )
-        button_start_search_size = (
-            int(self.view.top_buttons_width), 
-            int(self.view.top_buttons_height)
-        )
+
         self.view.buttonStartSearch.setGeometry(
             *button_start_search_pos,
             *button_start_search_size
@@ -250,93 +251,15 @@ class Handler:
         )
         self.view.spinner.setGeometry(*spinner_pos, *spinner_size)
 
-        line_edit_lfs_size = (
-            int(self.view.top_buttons_width / 2), 
-            int(self.view.top_buttons_height)
-        )
-        line_edit_lfs_pos = (
-            int(spinner_pos[0] - line_edit_lfs_size[0] - 5),
-            int(self.view.main_top_margin)
-        )
-        self.view.lineEditHFS.setGeometry(
-            *line_edit_lfs_pos,
-            *line_edit_lfs_size
-        )
-
-        line_edit_lfrl_size = (
-            int(self.view.top_buttons_width / 2), 
-            int(self.view.top_buttons_height)
-        )
-        line_edit_lfrl_pos = (
-            int(line_edit_lfs_pos[0] - line_edit_lfrl_size[0] - 5),
-            int(self.view.main_top_margin)
-        )
-        self.view.lineEditHFRH.setGeometry(
-            *line_edit_lfrl_pos,
-            *line_edit_lfrl_size
-        )
-
-        line_edit_lfrh_size = (
-            int(self.view.top_buttons_width / 2), 
-            int(self.view.top_buttons_height)
-        )
-        line_edit_lfrh_pos = (
-            int(line_edit_lfrl_pos[0] - line_edit_lfrh_size[0] - 5),
-            int(self.view.main_top_margin)
-        )
-        self.view.lineEditHFRL.setGeometry(
-            *line_edit_lfrh_pos,
-            *line_edit_lfrh_size
-        )
-
-        line_edit_hfs_size = (
-            int(self.view.top_buttons_width / 2), 
-            int(self.view.top_buttons_height)
-        )
-        line_edit_hfs_pos = (
-            int(line_edit_lfrh_pos[0] - line_edit_hfs_size[0] - 30),
-            int(self.view.main_top_margin)
-        )
-        self.view.lineEditLFS.setGeometry(
-            *line_edit_hfs_pos,
-            *line_edit_hfs_size
-        )
-
-        line_edit_hfrl_size = (
-            int(self.view.top_buttons_width / 2), 
-            int(self.view.top_buttons_height)
-        )
-        line_edit_hfrl_pos = (
-            int(line_edit_hfs_pos[0] - line_edit_hfrl_size[0] - 5),
-            int(self.view.main_top_margin)
-        )
-        self.view.lineEditLFRH.setGeometry(
-            *line_edit_hfrl_pos,
-            *line_edit_hfrl_size
-        )
-
-        line_edit_hfrh_size = (
-            int(self.view.top_buttons_width / 2), 
-            int(self.view.top_buttons_height)
-        )
-        line_edit_hfrh_pos = (
-            int(line_edit_hfrl_pos[0] - line_edit_hfrh_size[0] - 5),
-            int(self.view.main_top_margin)
-        )
-        self.view.lineEditLFRL.setGeometry(
-            *line_edit_hfrh_pos,
-            *line_edit_hfrh_size
-        )
-
         button_ep_settings_size = (
-            int(self.view.top_buttons_width), 
+            2 * int(self.view.top_buttons_width),
             int(self.view.top_buttons_height)
         )
         button_ep_settings_pos = (
-            int(line_edit_hfrh_pos[0] - button_ep_settings_size[0] - 5),
+            int(spinner_pos[0] - button_ep_settings_size[0] - 5),
             int(self.view.main_top_margin)
         )
-        
+
         self.view.buttonOpenEPSettings.setGeometry(
             *button_ep_settings_pos,
             *button_ep_settings_size

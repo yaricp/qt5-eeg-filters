@@ -13,6 +13,7 @@ from ep_bandpass_filter_selector import (
     PassbandSelector,
     export_data as ep_export_data
 )
+from utils import typing_value
 
 
 class Controller:
@@ -259,29 +260,45 @@ class Controller:
         """
         Starts EP bassband search
         """
-        # self.model.selector_filter_borders
+        p2p_coeff_parameters_dict = {}
+        for item in self.model.p2p_coeff_parameters[
+            self.model.p2p_coeff_variant
+        ]:
+            val = typing_value[item["type"]](item["value"])
+            logger.info(f"val: {val}")
+            p2p_coeff_parameters_dict[item["name"]] = val
+
+        cur_var_coeff_parameters_dict = {}
+        for item in self.model.cur_var_coeff_parameters[
+            self.model.cur_var_coeff_variant
+        ]:
+            val = typing_value[item["type"]](item["value"])
+            logger.info(f"val: {val}")
+            cur_var_coeff_parameters_dict[item["name"]] = val
+        
         pbs = PassbandSelector(
             curves=list(self.model.changed_curves.values()),
             tick_times=self.model.tick_times,
             fsr=self.config.fs,
             max_search_range=self.view.range_search_maxmums.getRegion(),
             min_search_range=self.view.range_search_minimums.getRegion(),
-            p2p_coeff_variant=self.model.default_p2p_coeff_variant,
-            cur_var_coeff_variant=self.model.default_cur_var_coeff_variant,
-            base_region=self.model.base_region,
+            p2p_coeff_variant=self.model.p2p_coeff_variant,
+            cur_var_coeff_variant=self.model.cur_var_coeff_variant,
             filter_high_limit_range=(
-                self.view.lineEditHFRL.text(),
-                self.view.lineEditHFRH.text()
+                self.model.hfrl,
+                self.model.hfrh
             ),
-            step_high_filter=self.view.lineEditHFS.text(),
+            step_high_filter=self.model.hfs,
             filter_low_limit_range=(
-                self.view.lineEditLFRL.text(),
-                self.view.lineEditLFRH.text()
+                self.model.lfrl,
+                self.model.lfrh
             ),
-            step_low_filter=self.view.lineEditLFS.text(),
+            step_low_filter=self.model.lfs,
             type_mean="average",
             cheb_filter_order=self.config.filter_order,
-            cheb_ripple=self.config.ripple
+            cheb_ripple=self.config.ripple,
+            **p2p_coeff_parameters_dict,
+            **cur_var_coeff_parameters_dict
         )
         print("Start!!!")
         result = pbs.start()

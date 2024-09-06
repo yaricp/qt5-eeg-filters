@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 """Main file of QT GUI."""
+from loguru import logger
 from PyQt5.QtWidgets import QApplication
 
 from models import Config, ModelData
 from handlers import Handler
-from controllers import Controller
+from controllers import Controller, PassbandSelector
 from views import ViewGraph
 
 
@@ -19,6 +20,36 @@ class MainWindow:
 
         self.config = Config()
         self.model = ModelData()
+        ep = PassbandSelector(
+            curves=[],
+            tick_times=[],
+            fsr=0,
+            max_search_range=(1, 2),
+            min_search_range=(1, 2)
+        )
+        self.model.p2p_coeff_variant = ep.p2p_coeff_variant
+        self.model.cur_var_coeff_variant = (
+            ep.curve_variability_coeff_variant
+        )
+        self.model.p2p_coeff_variants = list(
+            ep.p2p_coeff_functions.keys()
+        )
+        # logger.info(f"{ep.curve_variability_coeff_functions.keys()}")
+        self.model.cur_var_coeff_variants = list(
+            ep.curve_variability_coeff_functions.keys()
+        )
+        self.model.p2p_coeff_parameters = ep.p2p_coeff_functions_parameters
+        self.model.cur_var_coeff_parameters.update(
+            ep.curve_variability_coeff_functions_parameters
+        )
+
+        self.model.hfrh = self.config.hfrh
+        self.model.hfrl = self.config.hfrl
+        self.model.hfs = self.config.hfs
+        self.model.lfrl = self.config.lfrl
+        self.model.lfrh = self.config.lfrh
+        self.model.lfs = self.config.lfs
+
         self.view = ViewGraph(self.config, main=self)
         self.controller = Controller(self.config, self.model, self.view)
         self.handler = Handler(

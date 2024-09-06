@@ -97,24 +97,6 @@ class Ui_MainWindow(object):
         self.buttonOpenEPSettings.setObjectName("buttonOpenEPSettings")
         self.buttonOpenEPSettings.setEnabled(True)
 
-        self.lineEditHFRH = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEditHFRH.setObjectName("lineEditHFRH")
-
-        self.lineEditHFRL = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEditHFRL.setObjectName("lineEditHFRL")
-
-        self.lineEditHFS = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEditHFS.setObjectName("lineEditHFS")
-
-        self.lineEditLFRH = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEditLFRH.setObjectName("lineEditLFRH")
-
-        self.lineEditLFRL = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEditLFRL.setObjectName("lineEditLFRL")
-
-        self.lineEditLFS = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEditLFS.setObjectName("lineEditLFS")
-        
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 994, 22))

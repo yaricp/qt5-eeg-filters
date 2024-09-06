@@ -50,9 +50,20 @@ class ModelData:
     ep_found_bandpass = []
     ep_heatmap = {}
 
-    default_p2p_coeff_variant = ""
-    default_cur_var_coeff_variant = ""
+    p2p_coeff_variants = []
+    p2p_coeff_parameters = {}
+    cur_var_coeff_variants = []
+    cur_var_coeff_parameters = {}
+    p2p_coeff_variant = ""
+    cur_var_coeff_variant = ""
     base_region = ()
+
+    hfrh = 0
+    hfrl = 0
+    hfs = 0
+    lfrl = 0
+    lfrh = 0
+    lfs = 0
 
     def clear_extremums(self) -> None:
         """ Clear dict of extremums."""
