@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""Main file of QT GUI."""
+from loguru import logger
+from PyQt5.QtWidgets import QApplication
+
+from models import Config, ModelData
+from handlers import Handler
+from controllers import Controller, PassbandSelector
+from views import ViewGraph
+
+
+class MainWindow:
+
+    """Main windows of program."""
+
+    def __init__(self) -> None:
+        """initialization and prepare data."""
+
+        self.config = Config()
+        self.model = ModelData()
+        ep = PassbandSelector(
+            curves=[],
+            tick_times=[],
+            fsr=0,
+            max_search_range=(1, 2),
+            min_search_range=(1, 2)
+        )
+        self.model.p2p_coeff_variant = ep.p2p_coeff_variant
+        self.model.cur_var_coeff_variant = (
+            ep.curve_variability_coeff_variant
+        )
+        self.model.p2p_coeff_variants = list(
+            ep.p2p_coeff_functions.keys()
+        )
+        # logger.info(f"{ep.curve_variability_coeff_functions.keys()}")
+        self.model.cur_var_coeff_variants = list(
+            ep.curve_variability_coeff_functions.keys()
+        )
+        self.model.p2p_coeff_parameters = ep.p2p_coeff_functions_parameters
+        self.model.cur_var_coeff_parameters.update(
+            ep.curve_variability_coeff_functions_parameters
+        )
+
+        self.model.hfrh = self.config.hfrh
+        self.model.hfrl = self.config.hfrl
+        self.model.hfs = self.config.hfs
+        self.model.lfrl = self.config.lfrl
+        self.model.lfrh = self.config.lfrh
+        self.model.lfs = self.config.lfs
+
+        self.view = ViewGraph(self.config, main=self)
+        self.controller = Controller(self.config, self.model, self.view)
+        self.handler = Handler(
+            self.config, self.model, self.view, self.controller
+        )
+        self.view.resized.connect(
+            self.handler.reshow_elements_after_resize_main_window
+        )
+        self.view.bandwidths_clicked_event.connect(
+            self.handler.bandwidths_activated
+        )
+        self.view.maximums_region_changed_event.connect(
+            self.handler.change_range_search_extremums
+        )
+        self.view.minimums_region_changed_event.connect(
+            self.handler.change_range_search_extremums
+        )
+        self.view.edit_max_start_changed_event.connect(
+            self.handler.change_text_line_extremums_edits
+        )
+        self.view.edit_max_end_changed_event.connect(
+            self.handler.change_text_line_extremums_edits
+        )
+        self.view.edit_min_start_changed_event.connect(
+            self.handler.change_text_line_extremums_edits
+        )
+        self.view.edit_min_end_changed_event.connect(
+            self.handler.change_text_line_extremums_edits
+        )
+        self.view.menu_open_file_event.connect(self.handler.show_dialog_open)
+        self.view.open_clicked_event.connect(self.handler.show_dialog_open)
+        self.view.menu_save_file_event.connect(
+            self.handler.save_button_pressed
+        )
+        self.view.save_clicked_event.connect(self.handler.save_button_pressed)
+        self.view.menu_close_file_event.connect(
+            self.handler.close_button_pressed
+        )
+        self.view.add_clicked_event.connect(self.handler.add_new_bandwidth)
+        self.view.value_changed_event.connect(self.handler.change_value_slider)
+        self.view.toggle_visible_regions_event.connect(
+            self.handler.hide_show_regions
+        )
+
+        self.view.check_box_all.stateChanged.connect(
+            self.handler.select_deselect_all
+        )
+        self.view.start_ep_passband_search_event.connect(
+            self.handler.start_ep_passband_search
+        )
+        self.view.open_ep_settings_event.connect(
+            self.handler.open_ep_settings
+        )
+
+
+if __name__ == '__main__':
+    from sys import argv, exit
+    app = QApplication(argv)
+    win = MainWindow()
+    win.view.show()
+    exit(app.exec_())
