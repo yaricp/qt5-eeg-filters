@@ -67,17 +67,21 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
             [self.max_start_search, self.max_end_search]
         )
         self.range_search_maxmums.setBrush(
-            QtGui.QBrush(QtGui.QColor(0, 0, 255, 50))
+            QtGui.QBrush(QtGui.QColor(150, 50, 0, 50))
         )
-        self.maximums_region_changed_event = self.range_search_maxmums.sigRegionChangeFinished
+        self.maximums_region_changed_event = (
+            self.range_search_maxmums.sigRegionChangeFinished
+        )
 
         self.range_search_minimums = pg.LinearRegionItem(
             [self.min_start_search, self.min_end_search]
         )
         self.range_search_minimums.setBrush(
-            QtGui.QBrush(QtGui.QColor(0, 0, 50, 50))
+            QtGui.QBrush(QtGui.QColor(0, 50, 150, 50))
         )
-        self.minimums_region_changed_event = self.range_search_minimums.sigRegionChangeFinished
+        self.minimums_region_changed_event = (
+            self.range_search_minimums.sigRegionChangeFinished
+        )
 
         open_file_button = QAction(QIcon('open.png'), 'Open', self)
         open_file_button.setShortcut('Ctrl+O')

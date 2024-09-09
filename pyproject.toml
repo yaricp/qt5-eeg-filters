@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qt5-eeg-filters"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Yaroslav Pisarev"]
 license = "ISP"
@@ -12,7 +12,7 @@ PyQt5 = "5.15.1"
 loguru = "^0.5.3"
 pandas = "^1.1.3"
 numpy = "^1.19.2"
-ep-bandpass-filter-selector = "^0.0.2"
+ep-bandpass-filter-selector = "^0.2.0"
 pyqt5-sip = "12.8.1"
 pyqtgraph = "^0.13.3"
 

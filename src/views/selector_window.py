@@ -87,13 +87,16 @@ class SelectorWindow(QWidget):
             max_value = max(max_value, max(row[1:]))
             prev_data.append(row[1:])
 
-        delta = max_value - min_value
+        max_delta = max_value - min_value
         print("prev_data:", prev_data)
         for row in prev_data:
             image_row = []
             for value in row:
+                # image_row.append(
+                #     (max_delta - (value - min_value)) / max_delta
+                # )
                 image_row.append(
-                    (delta - (value - min_value)) / delta
+                    value / max_delta
                 )
             image_data.append(np.asarray(image_row))
 
