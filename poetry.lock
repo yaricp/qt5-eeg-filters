@@ -177,13 +177,13 @@ scipy = ">=1.4"
 
 [[package]]
 name = "ep-bandpass-filter-selector"
-version = "0.0.3"
+version = "0.0.4"
 description = "The EP Bandpass Filter Selector package cycles through various combinations of high- and low-pass cutoffs of the bandpass frequency filter within user-specified limits and selects the optimal filtering option. Optimization is carried out basing on the ratio of the EP interpeak amplitude to the EP curves variability coefficient."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "ep_bandpass_filter_selector-0.0.3-py3-none-any.whl", hash = "sha256:70e7ba6d6687da414afcd288d43a6a49ac213aedcd36826894aab60ab6a8d449"},
-    {file = "ep_bandpass_filter_selector-0.0.3.tar.gz", hash = "sha256:eadd88cce675a6001f2841c20eb7c4603d7ff4ff1f059b4442117ecab0ed534c"},
+    {file = "ep_bandpass_filter_selector-0.0.4-py3-none-any.whl", hash = "sha256:c377db76848fd4c595899de8bc7e472f532f7150f65227c79da7ece2a992d294"},
+    {file = "ep_bandpass_filter_selector-0.0.4.tar.gz", hash = "sha256:05f7951b9c96a37bcf72a6c0dc3c50cecaa9cb165442523caa2dc962c4527cf9"},
 ]
 
 [package.dependencies]
@@ -863,4 +863,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e42f73d94302e10004740857d5eb7bfa772b5596ce5deca101d11a783711ef7a"
+content-hash = "5d35ca7e3854d5d22e0a13a427b2ffff98536660246b7901f979ebbb7419f685"
