@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "qt5-eeg-filters"
-version = "0.2.0"
-description = ""
+version = "0.0.3"
+description = "QT5 interface for eeg-filters."
 authors = ["Yaroslav Pisarev"]
 license = "ISP"
 
