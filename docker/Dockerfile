@@ -1,24 +1,25 @@
 #FROM jozo/pyqt5:latest
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
-ARG INSTALL_TZ='Asia/Novosibirsk'
+#ARG INSTALL_TZ='Asia/Novosibirsk'
 
-RUN echo $INSTALL_TZ > /etc/timezone && \
-    apt-get update && apt-get install -y tzdata && \
-    rm /etc/localtime && \
-    ln -snf /usr/share/zoneinfo/$INSTALL_TZ /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata && \
-    apt-get clean
+#RUN echo $INSTALL_TZ > /etc/timezone && \
+#    apt-get update && apt-get install -y tzdata && \
+#    rm /etc/localtime && \
+#    ln -snf /usr/share/zoneinfo/$INSTALL_TZ /etc/localtime && \
+#    dpkg-reconfigure -f noninteractive tzdata && \
+#    apt-get clean
 
 RUN apt update && apt upgrade -y
-RUN apt install -y curl python3-pip python3-pyqt5 bash qt5-qmake
-RUN pip3 install poetry
+RUN apt install -y curl python3.12 python3-poetry python3-pyqt5 bash qt5-qmake
+# RUN pip3 install poetry
 
 COPY poetry.lock  pyproject.toml ./docker/start.sh /
 
 WORKDIR /
 
-RUN poetry install
+RUN poetry lock
+RUN poetry install --no-root
 
 COPY ./src /app
 

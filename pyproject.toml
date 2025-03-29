@@ -6,15 +6,14 @@ authors = ["Yaroslav Pisarev"]
 license = "ISP"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.12"
 eeg-filters = "^0.0.7"
-PyQt5 = "5.15.1"
-loguru = "^0.5.3"
-pandas = "^1.1.3"
-numpy = "^1.19.2"
-ep-bandpass-filter-selector = "^0.2.0"
-pyqt5-sip = "12.8.1"
-pyqtgraph = "^0.13.3"
+ep-bandpass-filter-selector = "^0.0.4"
+pyqt5 = "^5.15.11"
+loguru = "^0.7.3"
+pandas = "^2.2.3"
+numpy = "^2.2.4"
+pyqtgraph = "^0.13.7"
 
 [tool.poetry.dev-dependencies]
 
@@ -24,4 +23,3 @@ build-backend = "poetry.core.masonry.api"
 
 [virtualenvs]
 in-project = true
-

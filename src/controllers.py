@@ -2,8 +2,8 @@ import os
 import numpy as np
 from loguru import logger
 
-from eeg_filters import upload as eeg_filters_upload
-from eeg_filters.filters import make_filter, search_max_min
+from eeg_filters.data_importer import DataImporter
+from eeg_filters.filters import apply_filter, search_max_min
 from eeg_filters.export import export_curves, export_extremums
 
 from views import ViewGraph
@@ -74,7 +74,7 @@ class Controller:
             logger.info(f"self.config.filter_order: {self.config.filter_order}")
             logger.info(f"self.config.ripple: {self.config.ripple}")
 
-            filtred_data = make_filter(
+            filtred_data = apply_filter(
                 row,
                 bandwidth,
                 self.config.fs,
@@ -100,12 +100,12 @@ class Controller:
         flag_new = True
         self.model.dict_bandwidth_data = {}
         self.model.clear_extremums()
-        (
-            self.config.fs,
-            self.model.list_times,
-            self.model.tick_times,
-            self.model.list_data
-        ) = eeg_filters_upload.prepare_data(self.config.source_filepath)
+        result_import = DataImporter(self.config.source_filepath).data
+        self.config.fs = result_import["sample_rate"]
+        self.model.list_times = result_import["list_times"]
+        self.model.tick_times = result_import["list_ticks"]
+        self.model.list_data = result_import["list_curves"]
+        print(self.model.list_data)
         self.model.total_count = len(self.model.list_times)
         if self.model.total_count == 0:
             return False
@@ -142,6 +142,7 @@ class Controller:
                 'max': maximums,
                 'min': minimums
             })
+        print(dict_curves_filtred)
         self.model.dict_bandwidth_data.update(
             {'source': dict_curves_filtred})
         return True

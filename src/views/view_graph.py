@@ -186,8 +186,12 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
         delta = 0
         count = 0
+        print(dict_data)
         for time_stamp, row in dict_data.items():
             delta -= self.iter_value  # + last_max_value
+            print(type(delta))
+            print(f"row: {row}")
+            print(type(row))
             y = row + delta
             graph_item = self.graph.getPlotItem().dataItems[count]
             # just set curves for draggable points for move it this curve
