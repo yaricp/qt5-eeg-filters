@@ -102,8 +102,8 @@ class Controller:
         self.model.clear_extremums()
         result_import = DataImporter(self.config.source_filepath).data
         self.config.fs = result_import["sample_rate"]
-        self.model.list_times = result_import["list_times"]
-        self.model.tick_times = result_import["list_ticks"]
+        self.model.list_times = result_import["list_name_curves"]
+        self.model.tick_times = result_import["list_tick_times"]
         self.model.list_data = result_import["list_curves"]
         self.model.total_count = len(self.model.list_times)
         if self.model.total_count == 0:
