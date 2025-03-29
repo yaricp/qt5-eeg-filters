@@ -105,7 +105,6 @@ class Controller:
         self.model.list_times = result_import["list_times"]
         self.model.tick_times = result_import["list_ticks"]
         self.model.list_data = result_import["list_curves"]
-        print(self.model.list_data)
         self.model.total_count = len(self.model.list_times)
         if self.model.total_count == 0:
             return False
@@ -142,7 +141,6 @@ class Controller:
                 'max': maximums,
                 'min': minimums
             })
-        print(dict_curves_filtred)
         self.model.dict_bandwidth_data.update(
             {'source': dict_curves_filtred})
         return True
