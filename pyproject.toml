@@ -7,13 +7,14 @@ license = "ISP"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-eeg-filters = "^0.0.7"
-ep-bandpass-filter-selector = "^0.0.4"
-pyqt5 = "^5.15.11"
 loguru = "^0.7.3"
 pandas = "^2.2.3"
 numpy = "^2.2.4"
+pyqt5 = "^5.15.11"
 pyqtgraph = "^0.13.7"
+pyedflib = "^0.1.40"
+scipy = "^1.15.2"
+matplotlib = "^3.10.1"
 
 [tool.poetry.dev-dependencies]
 
