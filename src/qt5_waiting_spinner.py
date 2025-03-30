@@ -27,9 +27,11 @@ SOFTWARE.
 
 import math
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
+# from PyQt5.QtGui import *
+from PyQt5.QtWidgets import (
+    QWidget, QColor, QPainter, QTimer, QRect
+)
 
 
 class QtWaitingSpinner(QWidget):
@@ -80,13 +82,20 @@ class QtWaitingSpinner(QWidget):
         painter.setPen(Qt.NoPen)
         for i in range(0, self._numberOfLines):
             painter.save()
-            painter.translate(self._innerRadius + self._lineLength, self._innerRadius + self._lineLength)
+            painter.translate(
+                self._innerRadius + self._lineLength,
+                self._innerRadius + self._lineLength
+            )
             rotateAngle = float(360 * i) / float(self._numberOfLines)
             painter.rotate(rotateAngle)
             painter.translate(self._innerRadius, 0)
-            distance = self.lineCountDistanceFromPrimary(i, self._currentCounter, self._numberOfLines)
-            color = self.currentLineColor(distance, self._numberOfLines, self._trailFadePercentage,
-                                          self._minimumTrailOpacity, self._color)
+            distance = self.lineCountDistanceFromPrimary(
+                i, self._currentCounter, self._numberOfLines
+            )
+            color = self.currentLineColor(
+                distance, self._numberOfLines, self._trailFadePercentage,
+                self._minimumTrailOpacity, self._color
+            )
             painter.setBrush(color)
             painter.drawRoundedRect(
                 QRect(
@@ -213,12 +222,17 @@ class QtWaitingSpinner(QWidget):
             distance += totalNrOfLines
         return distance
 
-    def currentLineColor(self, countDistance, totalNrOfLines, trailFadePerc, minOpacity, colorinput):
+    def currentLineColor(
+        self, countDistance, totalNrOfLines, trailFadePerc,
+        minOpacity, colorinput
+    ):
         color = QColor(colorinput)
         if countDistance == 0:
             return color
         minAlphaF = minOpacity / 100.0
-        distanceThreshold = int(math.ceil((totalNrOfLines - 1) * trailFadePerc / 100.0))
+        distanceThreshold = int(
+            math.ceil((totalNrOfLines - 1) * trailFadePerc / 100.0)
+        )
         if countDistance > distanceThreshold:
             color.setAlphaF(minAlphaF)
         else:

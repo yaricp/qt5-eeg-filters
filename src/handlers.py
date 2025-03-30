@@ -106,7 +106,7 @@ class Handler:
 
         graph_size = (
             slider1_pos[0]
-            - 5 
+            - 5
             - self.view.left_checkboxes_width
             - 5
             - self.view.main_left_margin,
@@ -200,11 +200,15 @@ class Handler:
         )
 
         line_edit_min_start_size = (
-            int(self.view.top_buttons_width / 2), 
+            int(self.view.top_buttons_width / 2),
             int(self.view.top_buttons_height)
         )
         line_edit_min_start_pos = (
-            int(button_visible_region_pos[0] + button_visible_region_size[0] + 5),
+            int(
+                button_visible_region_pos[0]
+                + button_visible_region_size[0]
+                + 5
+            ),
             int(self.view.main_top_margin)
         )
         self.view.lineEditMinStart.setGeometry(
@@ -213,7 +217,7 @@ class Handler:
         )
 
         line_edit_min_end_size = (
-            int(self.view.top_buttons_width / 2), 
+            int(self.view.top_buttons_width / 2),
             int(self.view.top_buttons_height)
         )
         line_edit_min_end_pos = (
@@ -379,7 +383,10 @@ class Handler:
         return True
 
     def hide_show_regions(self):
-        """Handler click button for show and hide regions for search extremum."""
+        """
+        Handler click button for show and hide regions
+        for search extremum.
+        """
         if self.view.range_search_minimums.isVisible():
             self.view.range_search_minimums.setVisible(0)
             self.view.range_search_maxmums.setVisible(0)
@@ -450,7 +457,7 @@ class Handler:
             self.view.buttonStartSearch.setEnabled(True)
         else:
             self.view.buttonStartSearch.setEnabled(False)
-  
+
     def select_deselect_all(self) -> None:
         """
         Selects and deselects all checkboxes
@@ -470,16 +477,16 @@ class Handler:
         """
         runnable = RequestRunnable(self)
         QThreadPool.globalInstance().start(runnable)
-        #try:
+        # try:
         bandpass, heatmap = self.controller.start_ep_passband_search()
         self.model.ep_found_bandpass = bandpass
         self.model.ep_heatmap = heatmap
         QMetaObject.invokeMethod(
             self.view, "get_selector_result", Qt.QueuedConnection
         )
-        #except Exception as err:
+        # except Exception as err:
         #    logger.error(f"Error: {err}")
-           
+
         # self.view.spinner.show()
         # runnable = RequestRunnable(self)
         # try:

@@ -22,11 +22,13 @@ class DraggablePoint(pg.GraphItem):
 
     def setData(self, **kwds):
         self.data = kwds
-        if 'pos' in self.data:
-            npts = self.data['pos'].shape[0]
-            self.data['adj'] = np.column_stack((np.arange(0, npts-1), np.arange(1, npts)))
-            self.data['data'] = np.empty(npts, dtype=[('index', int)])
-            self.data['data']['index'] = np.arange(npts)
+        if "pos" in self.data:
+            npts = self.data["pos"].shape[0]
+            self.data["adj"] = np.column_stack(
+                (np.arange(0, npts-1), np.arange(1, npts))
+            )
+            self.data["data"] = np.empty(npts, dtype=[("index", int)])
+            self.data["data"]["index"] = np.arange(npts)
         self.update_graph()
 
     def update_graph(self):
@@ -46,7 +48,7 @@ class DraggablePoint(pg.GraphItem):
                 return
             self.dragPoint = pts[0]
             ind = pts[0].data()[0]
-            self.dragOffset = self.data['pos'][ind][0] - pos[0]
+            self.dragOffset = self.data["pos"][ind][0] - pos[0]
 
         elif ev.isFinish():
             self.dragPoint = None
@@ -66,7 +68,7 @@ class DraggablePoint(pg.GraphItem):
         # logger.info(f"value: {new_y}")
         index_time = ind.to_list()[0]
         # logger.info(f"found index_time: {index_time}")
-        self.data['pos'] = np.array(
+        self.data["pos"] = np.array(
             [[index_time, new_y]]
         )
         self.controller.change_extremum_data(

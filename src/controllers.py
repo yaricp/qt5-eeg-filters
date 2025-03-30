@@ -52,7 +52,9 @@ class Controller:
                 )
             })
             self.counter_proc += 1
-            progress = self.counter_proc * self.counter_factor / self.model.total_count
+            progress = (
+                self.counter_proc * self.counter_factor
+            ) / self.model.total_count
             self.view.set_progress_value(progress)
 
         dict_extremums.update({'%s' % bandwidth: dict_data_extremums})
@@ -71,7 +73,9 @@ class Controller:
             logger.info(f"len row: {len(row)}")
             logger.info(f"bandwidth: {bandwidth}")
             logger.info(f"self.config.fs: {self.config.fs}")
-            logger.info(f"self.config.filter_order: {self.config.filter_order}")
+            logger.info(
+                f"self.config.filter_order: {self.config.filter_order}"
+            )
             logger.info(f"self.config.ripple: {self.config.ripple}")
 
             filtred_data = apply_filter(
@@ -83,7 +87,9 @@ class Controller:
             )
             dict_curves_filtred.update({key_curv: filtred_data})
             self.counter_proc += 1
-            progress = self.counter_proc * self.counter_factor / self.model.total_count
+            progress = (
+                self.counter_proc * self.counter_factor
+            ) / self.model.total_count
             self.view.set_progress_value(progress)
 
         self.model.dict_bandwidth_data.update({
@@ -109,33 +115,39 @@ class Controller:
         if self.model.total_count == 0:
             return False
         dict_curves_filtred = {}
-        for time_stamp, row in zip(self.model.list_times, self.model.list_data):
+        for name_curve, curve in zip(
+            self.model.list_times, self.model.list_data
+        ):
             self.counter_proc += 1
-            progress = self.counter_proc * self.counter_factor / self.model.total_count
+            progress = (
+                self.counter_proc * self.counter_factor
+            ) / self.model.total_count
             self.view.set_progress_value(progress)
-            dict_curves_filtred.update({time_stamp: row})
-
+            dict_curves_filtred.update({name_curve: curve})
+            logger.info(f"name_curve: {name_curve} added")
             #  prepare graph
             if flag_new:
                 # create new plots for curves
-                self.view.create_graph(time_stamp)
-                self.view.add_checkbox(self.counter_proc, time_stamp)
-
+                self.view.create_graph(name_curve)
+                self.view.add_checkbox(self.counter_proc, name_curve)
         if flag_new:
             self.view.add_ranges_extremums()
         if flag_new:
             maximums = {}
             minimums = {}
-            for time_stamp in self.model.list_times:
+            for name_curve in self.model.list_times:
                 self.counter_proc += 1
-
-                progress = self.counter_proc * self.counter_factor / self.model.total_count
+                progress = (
+                    self.counter_proc * self.counter_factor
+                ) / self.model.total_count
                 self.view.set_progress_value(progress)
                 # create new points on graphic for extremums
-                (showed_max, showed_min) = self.view.add_point_extremums(time_stamp)
-
-                maximums.update({time_stamp: showed_max})
-                minimums.update({time_stamp: showed_min})
+                (showed_max, showed_min) = self.view.add_point_extremums(
+                    name_curve
+                )
+                maximums.update({name_curve: showed_max})
+                minimums.update({name_curve: showed_min})
+                logger.info(f"{name_curve} extremums added")
             # save new extremums in model
             self.model.dict_showed_extremums.update({
                 'max': maximums,
@@ -201,7 +213,9 @@ class Controller:
         for bandwidth, dict_data in self.model.dict_bandwidth_data.items():
             if bandwidth != 'source':
                 self.counter_proc += 1
-                progress = self.counter_proc * self.counter_factor / total_count
+                progress = (
+                    self.counter_proc * self.counter_factor
+                ) / total_count
                 self.view.set_progress_value(progress)
                 export_curves(
                     self.config.source_filepath,
@@ -219,7 +233,10 @@ class Controller:
                         key_max: (row_max, row_min)
                     })
 
-                max_search_range, min_search_range = self.view.get_ranges_extremums()
+                (
+                    max_search_range,
+                    min_search_range
+                ) = self.view.get_ranges_extremums()
                 times_ranges = (max_search_range, min_search_range)
                 export_extremums(
                     self.config.source_filepath,
@@ -231,7 +248,8 @@ class Controller:
 
     def change_extremum_data(self, time, *args):
         """
-        Save changed value of extremum point when user move this point by curve.
+        Save changed value of extremum point when user move 
+        this point by curve.
         """
         logger.info(f"tick time: {time}")
         curve_data = self.model.dict_bandwidth_data[args[1]][args[2]]

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from loguru import logger
+# from loguru import logger
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtWidgets
 
@@ -121,9 +121,13 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "EEG-Filters"))
         self.buttonOpen.setText(_translate("MainWindow", "Open"))
         self.buttonAdd.setText(_translate("MainWindow", "Add"))
-        self.buttonVisibleRegion.setText(_translate("MainWindow", "HideRegions"))
+        self.buttonVisibleRegion.setText(
+            _translate("MainWindow", "HideRegions")
+        )
         self.buttonStartSearch.setText(_translate("MainWindow", "StartSearch"))
-        self.buttonOpenEPSettings.setText(_translate("MainWindow", "OpenEPSettings"))
+        self.buttonOpenEPSettings.setText(
+            _translate("MainWindow", "OpenEPSettings")
+        )
         self.buttonSave.setText(_translate("MainWindow", "Save"))
         self.actionopen.setText(_translate("MainWindow", "open"))
         self.actionsave.setText(_translate("MainWindow", "save"))
