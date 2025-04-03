@@ -14,9 +14,7 @@ services:
       - poetry run python /app/src/main.py
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
-#      args:
-#        INSTALL_TZ: ${INSTALL_TZ}
+      dockerfile: ./docker/${DOCKERFILE}
 
 volumes:
   app-db-data:
