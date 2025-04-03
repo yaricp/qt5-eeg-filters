@@ -27,11 +27,9 @@ SOFTWARE.
 
 import math
 
-from PyQt5.QtCore import Qt
-# from PyQt5.QtGui import *
-from PyQt5.QtWidgets import (
-    QWidget, QColor, QPainter, QTimer, QRect
-)
+from PyQt5.QtCore import Qt, QTimer, QRect
+from PyQt5.QtGui import QColor, QPainter
+from PyQt5.QtWidgets import QWidget
 
 
 class QtWaitingSpinner(QWidget):
