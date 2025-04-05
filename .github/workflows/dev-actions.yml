@@ -14,12 +14,12 @@ jobs:
       - uses: actions/checkout@v2
       - name: install dependencies
         run: |
-          ls -a;
           bash -c ./scripts/./install.sh;
+          ls -a;
       - name: run linters
         run: |
-          .venv/bin/poetry run flake8 eeg_filters
-          .venv/bin/poetry run ruff check eeg_filters
+          poetry run flake8 eeg_filters
+          poetry run ruff check eeg_filters
       # - name: run unittests
       #   run: .venv/bin/poetry run pytest
 
