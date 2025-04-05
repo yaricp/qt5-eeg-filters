@@ -3,7 +3,9 @@
 sudo apt update -y;
 sudo apt install -y curl python3 python3-pip python3-pyqt5;
 pip3 install poetry;
-cd ../;
+if [ "${PWD##*/}" == "scripts" ]; then
+  cd ../;
+fi
 export PATH=$PATH:$HOME/.local/bin;
 echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc;
 poetry config virtualenvs.in-project true;
