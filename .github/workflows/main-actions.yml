@@ -1,0 +1,38 @@
+name: Run check format lint and unittests
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run-linters-unittests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: bash -c ./scripts/./install.sh;
+      - name: run linters
+        run: |
+          .venv/bin/poetry run flake8 eeg_filters
+          .venv/bin/poetry run ruff check eeg_filters
+      - name: run unittests
+        run: .venv/bin/poetry run pytest
+
+  build_public_package:
+    needs: run-linters-unittests
+    runs-on: ubuntu-latest
+    environment: main
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v2.1
+        with:
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
+          repository_name: "eeg-filters"
+
