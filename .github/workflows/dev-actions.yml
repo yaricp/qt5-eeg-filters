@@ -13,7 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
-        run: bash -c ./scripts/./install.sh;
+        run: |
+          ls -a;
+          bash -c ./scripts/./install.sh;
       - name: run linters
         run: |
           .venv/bin/poetry run flake8 eeg_filters
