@@ -13,7 +13,7 @@ services:
       - poetry run python /app/src/main.py
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/${DOCKERFILE}
 
 volumes:
   app-db-data:
