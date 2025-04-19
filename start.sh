@@ -1,10 +1,10 @@
 #!/bin/bash
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    ./scripts/linux/install.sh;
+    sh ./scripts/linux/install.sh;
     cp .env_linux .env;
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    ./scripts/macos/install.sh;
+    sh ./scripts/macos/install.sh;
     cp .env_macos .env;
 elif [[ "$OSTYPE" == "cygwin" ]]; then
     echo "cygwin not supported yet!"
