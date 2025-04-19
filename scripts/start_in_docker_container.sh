@@ -4,5 +4,5 @@ xhost +
 if [ "${PWD##*/}" == "scripts" ]; then
   cd ../;
 fi
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d

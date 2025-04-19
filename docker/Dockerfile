@@ -10,9 +10,6 @@ WORKDIR /
 RUN poetry lock
 RUN poetry install --no-root
 
-# Set up Xvfb
-# RUN echo "Xvfb :1 -screen 0 1024x768x16 &" >> /etc/X11/Xsession
-
 COPY ./src /app
 
 ENTRYPOINT ["/usr/bin/bash", "-c"]
