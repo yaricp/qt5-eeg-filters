@@ -1,10 +1,12 @@
 #!/bin/bash
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    sh ./scripts/linux/install.sh;
+    echo "Found Linux OS";
+    ./scripts/linux/install.sh;
     cp .env_linux .env;
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    sh ./scripts/macos/install.sh;
+    echo "Found MacOS";
+    ./scripts/macos/install.sh;
     cp .env_macos .env;
 elif [[ "$OSTYPE" == "cygwin" ]]; then
     echo "cygwin not supported yet!"
@@ -15,8 +17,9 @@ elif [[ "$OSTYPE" == "win32" ]]; then
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
     echo "freebsd not supported yet!"
 fi
-
+echo "Download the latest version docker container image of application";
 docker compose pull;
 export DISPLAY=:0.0 ;
 xhost + ;
+echo "Starting the App";
 docker compose up -d;

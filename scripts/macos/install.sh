@@ -4,9 +4,7 @@ echo "Checking docker installation"
 if command -v docker &> /dev/null; then
     echo "Docker installation found"
 else
+    echo "Installation of Docker Engine"
     sudo curl -fsSL https://get.docker.com -o get-docker.sh
     sudo sh get-docker.sh
-    # COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-    # sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    # sudo chmod +x /usr/local/bin/docker-compose
 fi
