@@ -8,8 +8,11 @@ if [ "${PWD##*/}" == "scripts" ]; then
 fi
 export PATH=$PATH:$HOME/.local/bin;
 echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc;
-poetry config virtualenvs.in-project true;
+echo "start creating lock file"
 poetry lock;
+echo "config poetry";
+poetry config virtualenvs.in-project true;
+echo "install packages";
 poetry install --no-root;
 
 
