@@ -36,8 +36,15 @@ jobs:
       - name: Build a new docker image
         env:
           DOCKER_IMAGE: "ghcr.io/yaricp/qt5-eeg-filters-ubuntu"
+          DOCKERFILE: DockerfileUbuntu
           TAG: "test"
         run: docker compose build
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.PAT_RUNNER }}
       - name: Publish to github
         run: docker compose push
       - name: Publish to dockerhub
