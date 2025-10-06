@@ -24,7 +24,7 @@ jobs:
       # - name: run unittests
       #   run: .venv/bin/poetry run pytest
 
-  test_build_public_package:
+  build_publish_ubuntu_image:
     needs: run-linters-unittests
     runs-on: ubuntu-latest
     environment: dev
@@ -45,12 +45,23 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.PAT_RUNNER }}
-      - name: Publish to github
-        run: docker compose push
-      - name: Publish to dockerhub
-        env:
-          DOCKER_IMAGE: "yaricp/qt5-eeg-filters-ubuntu"
-          TAG: "test"
+      - name: make tag to latest
         run: |
-          docker login -u yaricp
-          docker compose push
+          docker tag ghcr.io/yaricp/qt5-eeg-filters-ubuntu:test ghcr.io/yaricp/qt5-eeg-filters-ubuntu:latest
+      - name: Publish test tag to github
+        env:
+          DOCKER_IMAGE: "ghcr.io/yaricp/qt5-eeg-filters-ubuntu"
+          TAG: "test"
+        run: docker compose push
+      - name: Publish latest tag to github
+        env:
+          DOCKER_IMAGE: "ghcr.io/yaricp/qt5-eeg-filters-ubuntu"
+          TAG: "latest"
+        run: docker compose push
+      # - name: Publish to dockerhub
+      #   env:
+      #     DOCKER_IMAGE: "yaricp/qt5-eeg-filters-ubuntu"
+      #     TAG: "test"
+      #   run: |
+      #     docker login -u yaricp
+      #     docker compose push
