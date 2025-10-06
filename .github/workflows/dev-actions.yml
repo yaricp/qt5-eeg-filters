@@ -19,8 +19,8 @@ jobs:
           ls -a;
       - name: run linters
         run: |
-          poetry run flake8 /src
-          # poetry run ruff check /src
+          poetry run flake8 src
+          # poetry run ruff check src
       # - name: run unittests
       #   run: .venv/bin/poetry run pytest
 
