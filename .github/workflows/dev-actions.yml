@@ -15,6 +15,7 @@ jobs:
       - name: install dependencies
         run: |
           bash -c ./scripts/./local_install.sh;
+          
           ls -a;
       - name: run linters
         run: |

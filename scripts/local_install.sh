@@ -9,6 +9,7 @@ fi
 export PATH=$PATH:$HOME/.local/bin;
 echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc;
 poetry config virtualenvs.in-project true;
+poetry lock;
 poetry install --no-root;
 
 
