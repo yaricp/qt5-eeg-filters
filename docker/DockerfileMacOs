@@ -1,7 +1,9 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
+ENV TZ=CET
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt update && apt upgrade -y
-RUN apt install -y curl python3.12 python3-poetry python3-pyqt5 bash qt5-qmake
+RUN apt install -y curl python3.10 python3-poetry python3-pyqt5 bash qt5-qmake
 
 COPY pyproject_macos.toml /pyproject.toml
 COPY ./docker/start.sh /
