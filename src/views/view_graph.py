@@ -61,7 +61,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
         self.listBandwidths.addItems(
             ['%s' % b for b in self.bandwidths]
         )
-        
+
         self.bandwidths_clicked_event = self.listBandwidths.itemClicked
         self.range_search_maxmums = pg.LinearRegionItem(
             [self.max_start_search, self.max_end_search]
@@ -273,7 +273,7 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
     def create_graph(self, time_stamp):
         """Create new plot for new curve."""
         plot = self.graph.plot(
-            name=time_stamp, clickable=True, 
+            name=time_stamp, clickable=True,
             pen=pg.mkPen(color=(0, 0, 0), width=1.5)
         )
         plot.sigClicked.connect(
@@ -326,8 +326,10 @@ class ViewGraph(QMainWindow, ui.Ui_MainWindow):
 
     def get_ranges_extremums(self):
         """Get values of bounds of regions for search extremums."""
-        max_search_range = [round(x, 4) for x in self.range_search_maxmums.getRegion()]
-        min_search_range = [round(x, 4) for x in self.range_search_minimums.getRegion()]
+        max_region = self.range_search_maxmums.getRegion()
+        max_search_range = [round(x, 4) for x in max_region]
+        min_region = self.range_search_minimums.getRegion()
+        min_search_range = [round(x, 4) for x in min_region]
         return max_search_range, min_search_range
 
     def add_point_extremums(self, time_stamp):

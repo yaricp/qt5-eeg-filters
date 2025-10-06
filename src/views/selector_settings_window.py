@@ -281,7 +281,8 @@ class SelectorSettingsWindow(QWidget):
         """Gets count rows parameters"""
         logger.info("start get_rows_parameters")
         count = 0
-        for item in self.parent.main_window.model.p2p_coeff_parameters.values():
+        model = self.parent.main_window.model
+        for item in model.p2p_coeff_parameters.values():
             count = max(count, len(item))
         logger.info(f"count: {count}")
         return count
@@ -331,7 +332,8 @@ class SelectorSettingsWindow(QWidget):
         parameter_geo = self.combo_box2_geo
         for variant in self.parent.main_window.model.cur_var_coeff_variants:
             if selected_option == variant:
-                for item in self.parent.main_window.model.cur_var_coeff_parameters[
+                model = self.parent.main_window.model
+                for item in model.cur_var_coeff_parameters[
                    variant
                 ]:
                     logger.info(f"item: {item}")
@@ -354,9 +356,8 @@ class SelectorSettingsWindow(QWidget):
                     parameter.setGeometry(*parameter_geo)
                     parameter.show()
             else:
-                for item in self.parent.main_window.model.cur_var_coeff_parameters[
-                   variant
-                ]:
+                model = self.parent.main_window.model
+                for item in model.cur_var_coeff_parameters[variant]:
                     q_line = self.findChild(QLineEdit, item["name"])
                     q_line.deleteLater()
                     q_label = self.findChild(

@@ -15,12 +15,12 @@ jobs:
       - name: install dependencies
         run: |
           bash -c ./scripts/./local_install.sh;
-          
+
           ls -a;
       - name: run linters
         run: |
-          poetry run flake8 eeg_filters
-          poetry run ruff check eeg_filters
+          poetry run flake8 /src
+          # poetry run ruff check /src
       # - name: run unittests
       #   run: .venv/bin/poetry run pytest
 

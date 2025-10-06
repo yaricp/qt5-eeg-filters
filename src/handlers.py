@@ -17,7 +17,7 @@ class RequestRunnable(QRunnable):
         Starts new threads for selector.
         """
         self.handler.view.spinner.show()
-        # bandpass, heatmap = self.handler.controller.start_ep_passband_search()
+        # bandpass, heatmap = self.handler.controller.start_ep_passb
         # self.handler.model.ep_found_bandpass = bandpass
         # self.handler.model.ep_heatmap = heatmap
         # QMetaObject.invokeMethod(
@@ -54,7 +54,7 @@ class Handler:
         )
 
         button_add_passband_size = (
-            self.view.bandwidth_area_width, 
+            self.view.bandwidth_area_width,
             self.view.top_buttons_height
         )
         button_add_passband_pos = (
@@ -138,7 +138,7 @@ class Handler:
         check_box_all_pos = (
             int(self.view.main_left_margin),
             int(
-                self.view.main_top_margin 
+                self.view.main_top_margin
                 + self.view.top_buttons_height / 2
                 - self.view.left_checkboxes_height/2
             )
@@ -149,7 +149,7 @@ class Handler:
         )
 
         button_save_size = (
-            int(self.view.top_buttons_width), 
+            int(self.view.top_buttons_width),
             int(self.view.top_buttons_height)
         )
         button_save_pos = (
@@ -161,7 +161,7 @@ class Handler:
         )
 
         line_edit_max_start_size = (
-            int(self.view.top_buttons_width / 2), 
+            int(self.view.top_buttons_width / 2),
             int(self.view.top_buttons_height)
         )
         line_edit_max_start_pos = (
@@ -174,7 +174,7 @@ class Handler:
         )
 
         line_edit_max_end_size = (
-            int(self.view.top_buttons_width / 2), 
+            int(self.view.top_buttons_width / 2),
             int(self.view.top_buttons_height)
         )
         line_edit_max_end_pos = (
@@ -187,7 +187,7 @@ class Handler:
         )
 
         button_visible_region_size = (
-            int(self.view.top_buttons_width), 
+            int(self.view.top_buttons_width),
             int(self.view.top_buttons_height)
         )
         button_visible_region_pos = (
@@ -230,7 +230,7 @@ class Handler:
         )
 
         button_start_search_size = (
-            2 * int(self.view.top_buttons_width), 
+            2 * int(self.view.top_buttons_width),
             int(self.view.top_buttons_height)
         )
         button_start_search_pos = (
@@ -246,7 +246,7 @@ class Handler:
         )
 
         spinner_size = (
-            int(self.view.top_buttons_height), 
+            int(self.view.top_buttons_height),
             int(self.view.top_buttons_height)
         )
         spinner_pos = (
@@ -447,12 +447,12 @@ class Handler:
         index_curve = self.model.list_times.index(key)
         graph_plot_item = self.view.graph.getPlotItem().items[index_curve]
         curve = self.model.dict_bandwidth_data["source"][key]
-        if b.isChecked() == True:
+        if b.isChecked() is True:
             self.model.changed_curves[key] = curve
             graph_plot_item.setPen(color="g", width=3)
         else:
             del self.model.changed_curves[key]
-            graph_plot_item.setPen(color=(0,0,0), width=2)
+            graph_plot_item.setPen(color=(0, 0, 0), width=2)
         if len(self.model.changed_curves) >= 2:
             self.view.buttonStartSearch.setEnabled(True)
         else:
@@ -462,7 +462,7 @@ class Handler:
         """
         Selects and deselects all checkboxes
         """
-        if self.view.check_box_all.isChecked() == True:
+        if self.view.check_box_all.isChecked() is True:
             for checkbox in self.model.check_box_list:
                 checkbox.setChecked(True)
             self.view.buttonStartSearch.setEnabled(True)

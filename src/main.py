@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """Main file of QT GUI."""
-from loguru import logger
 from PyQt5.QtWidgets import QApplication
 
 from models import Config, ModelData

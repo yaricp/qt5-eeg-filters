@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import pyqtgraph as pg
 from PyQt5 import QtCore
-from loguru import logger
 
 
 class DraggablePoint(pg.GraphItem):
@@ -58,7 +57,7 @@ class DraggablePoint(pg.GraphItem):
                 ev.ignore()
                 return
         # logger.info(f"self.curve.index: {self.curve.index}" )
-        
+
         new_x = round(ev.pos()[0] + self.dragOffset, 4)
         # logger.info(f"new_x: {new_x}")
         ind = self.curve.index[self.curve.index.get_indexer(

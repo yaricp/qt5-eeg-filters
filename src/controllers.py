@@ -248,7 +248,7 @@ class Controller:
 
     def change_extremum_data(self, time, *args):
         """
-        Save changed value of extremum point when user move 
+        Save changed value of extremum point when user move
         this point by curve.
         """
         logger.info(f"tick time: {time}")
@@ -265,7 +265,6 @@ class Controller:
         )
         value = curve_data[ind][0]
         logger.info(f"New real value: {value}")
-        
         model[args[0]][args[1]][args[2]] = (
             time, value
         )
@@ -292,7 +291,7 @@ class Controller:
             val = typing_value[item["type"]](item["value"])
             logger.info(f"val: {val}")
             cur_var_coeff_parameters_dict[item["name"]] = val
-        
+
         pbs = PassbandSelector(
             curves=list(self.model.changed_curves.values()),
             tick_times=self.model.tick_times,

@@ -37,18 +37,18 @@ class Ui_MainWindow(object):
             self.centralwidget
         )
         self.buttonAdd.setObjectName("buttonAdd")
-        
+
         self.newBandwidthField = QtWidgets.QLineEdit(
             self.centralwidget
         )
         self.newBandwidthField.setObjectName("newBandwidthField")
-        
+
         self.listBandwidths = QtWidgets.QListWidget(
             self.centralwidget
         )
         self.listBandwidths.setEnabled(True)
         self.listBandwidths.setObjectName("listBandwidths")
-        
+
         self.slider1 = QtWidgets.QSlider(
             QtCore.Qt.Vertical, self.centralwidget
         )
@@ -60,9 +60,9 @@ class Ui_MainWindow(object):
 
         self.check_box_all = QtWidgets.QCheckBox("ckbxall", self.centralwidget)
         self.check_box_all.setObjectName("ckbxall")
-        
+
         self.check_box_all.setText("all")
-        
+
         self.buttonOpen = QtWidgets.QPushButton(
             self.centralwidget
         )
@@ -73,16 +73,16 @@ class Ui_MainWindow(object):
         )
         self.buttonSave.setObjectName("buttonSave")
 
-        #TODO: не хватает подписей к полям редактирования
+        # TODO: не хватает подписей к полям редактирования
         self.lineEditMaxStart = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEditMaxStart.setObjectName("lineEditMaxStart")
-        
+
         self.lineEditMaxEnd = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEditMaxEnd.setObjectName("lineEditMaxEnd")
-        
+
         self.lineEditMinStart = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEditMinStart.setObjectName("lineEditMinStart")
-        
+
         self.lineEditMinEnd = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEditMinEnd.setObjectName("lineEditMinEnd")
 
