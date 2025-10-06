@@ -35,15 +35,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build a new docker image
         env:
-          DOCKER_IMAGE: "ghcr.io/yaricp/qt5-eeg-filters"
+          DOCKER_IMAGE: "ghcr.io/yaricp/qt5-eeg-filters-ubuntu"
           TAG: "test"
-        run: docker-compose build
+        run: docker compose build
       - name: Publish to github
-        run: docker-compose push
-      - name: Publish to github
+        run: docker compose push
+      - name: Publish to dockerhub
         env:
-          DOCKER_IMAGE: "yaricp/qt5-eeg-filters"
+          DOCKER_IMAGE: "yaricp/qt5-eeg-filters-ubuntu"
           TAG: "test"
         run: |
           docker login -u yaricp
-          docker-compose push
+          docker compose push
