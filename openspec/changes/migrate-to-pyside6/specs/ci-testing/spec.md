@@ -21,6 +21,42 @@ with `poetry run pytest`.
 - **WHEN** the extremum-search test runs on a curve with known extremums
 - **THEN** the found maximum/minimum positions match the known values
 
+### Requirement: GUI interaction wiring is covered by tests
+The test suite SHALL cover the interaction wiring between pyqtgraph items,
+Qt widgets and the model: search-region changes, bandwidth checkboxes,
+curve clicks and the custom draggable point item.
+
+#### Scenario: Region change propagates to edits and model
+- **WHEN** a test moves a search region via `setRegion()` (which emits the
+  same signal as a finished mouse drag)
+- **THEN** the corresponding start/end line-edits and the model's search
+  range reflect the new boundaries, and extremums are recomputed
+
+#### Scenario: Line-edit change propagates to region
+- **WHEN** a test enters a new boundary value into a start/end line-edit
+- **THEN** the corresponding region on the plot moves to match
+
+#### Scenario: Bandwidth checkbox toggles curve visibility
+- **WHEN** a test clicks a bandwidth checkbox (real `qtbot.mouseClick`)
+- **THEN** the corresponding curve's visibility changes accordingly
+
+#### Scenario: Custom draggable item reacts to drag events
+- **WHEN** a test invokes `mouseDragEvent` on the custom item from
+  `points.py` with a fabricated event
+- **THEN** the item's position updates as the handler prescribes
+
+### Requirement: Synthetic mouse-drag integration tests on migrated stack
+After the PySide6 migration is green, the suite SHALL include 2–3
+integration tests that drag plot regions with synthetic QMouseEvents
+(data-to-pixel mapping through the viewbox) to validate the full
+mouse-to-model chain offscreen.
+
+#### Scenario: Synthetic drag moves a region
+- **WHEN** a synthetic press-move-release sequence is sent to the plot
+  viewport across a region boundary at a fixed window size
+- **THEN** `getRegion()` returns moved boundaries and the line-edits/model
+  update as in a human drag
+
 ### Requirement: CI runs lint and tests on a three-OS matrix
 Every push to `dev` SHALL trigger a CI job matrix on ubuntu, windows and
 macos runners that installs the project with Poetry and runs the test

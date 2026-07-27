@@ -51,14 +51,28 @@ commented out).
    green. Tests use `QT_QPA_PLATFORM=offscreen` so they run headless on
    all CI runners without a display server.
 
-6. **Test scope for this change** (deliberately minimal):
-   - `test_app_starts`: `MainWindow` constructs, view shows, signals
-     connected (pytest-qt `qtbot`).
-   - `test_filters`: Chebyshev filter application on `data/data1.txt`
-     produces expected shape/values (pure logic, no GUI).
-   - `test_extremum_search`: extremum search over a known curve returns
-     known points.
-   Deeper GUI interaction tests are follow-up work, not this change.
+6. **Test scope for this change** — three-level GUI testing strategy:
+   - **Level 1 (pre-migration, main safety net)** — API-driven
+     interaction tests exploiting the fact that
+     `LinearRegionItem.setRegion()` emits the same
+     `sigRegionChangeFinished` as a mouse-drag release:
+     region → line-edits → model sync (both directions), bandwidth
+     checkbox toggles (`qtbot.mouseClick`), select-all checkbox,
+     curve `sigClicked`. Plus `test_app_starts`, `test_filters`,
+     `test_extremum_search` (as before).
+   - **Level 3 (pre-migration)** — direct `mouseDragEvent(fake_event)`
+     test for the custom draggable item in `points.py`.
+   - **Level 2 (post-migration, 2–3 tests)** — true synthetic mouse
+     drags: map data coords to viewport pixels via
+     `viewbox.mapViewToScene()`, send QMouseEvent press/move/release
+     (pyqtgraph's own `tests/ui_testing.py` technique, ~20-line local
+     helper); fixed window size for determinism.
+   - **Rejected**: screenshot/pixel comparison — brittle across
+     platforms; state is asserted via `getRegion()`, widget text and
+     model instead.
+   Levels 1+3 run against PyQt5 first (green), guard the migration,
+   then must stay green on PySide6. Level 2 validates the migrated
+   stack end-to-end.
 
 7. **`start.sh` becomes a thin native launcher**: check `.venv` exists
    (else `poetry install`), then `poetry run python src/main.py`. Per-OS
