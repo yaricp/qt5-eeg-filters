@@ -149,3 +149,6 @@ files
 *eric6*
 
 .idea*
+
+# LLM agent working notes
+.agent-workspace/
